@@ -372,7 +372,7 @@ Each sub-task is independent enough to be implemented and reviewed on its own, i
 - **Expected outcomes:** sidebar with a Publishers group, filter bar, three shelves, deep-linkable filters, publisher/author chips, working Recommended shelf with guest fallback, responsive per section 5.
 - **Todo:** `CategorySidebar`, `FilterBar`, `ActiveFilterTags`, `BookShelf`, `BookCard` (catalogue), `CoverPlaceholder`, `AuthorLink`, `CategoryTags`, `PriceTag`, `DeliveryDate`, `useCatalogueFilters`, `useRecommendations`; the Home page.
 - **Relevant context:** screenshot 01.
-- **Status:** `[ ] pending`
+- **Status:** `[x] done`
 
 ### ST6 — Product detail
 - **Intent:** J4.
@@ -516,6 +516,37 @@ _(append after each sub-task)_
   - `npm run typecheck` — 0 errors
   - `npm test` — 17 test files, 103 passed
   - `npm run build` — ✓ built successfully
+
+#### ST5 handover
+- **Home and Catalogue Page (`src/pages/Home.tsx`, `src/pages/Home.scss`):**
+  - Renders the full catalogue page matching screenshot `01-home-catalogue.jpg` using Carbon g100 tokens and theme variables.
+  - **CategorySidebar (`src/components/CategorySidebar/`):** Full category taxonomy matching the design layout, active item highlighted with a 3px blue left border (`$border-interactive` / `#0f62fe`), plus a "Publishers" group (D2) and "All" reset option.
+  - **FilterBar (`src/components/FilterBar/`):** Search input (`q`), Language dropdown, Format dropdown, Price Range dropdown, and Sort By dropdown. Synchronised bidirectionally with URL query parameters (`?category=&q=&language=&format=&priceRange=&sort=&publisher=&author=`) using `useCatalogueFilters`.
+  - **ActiveFilterTags (`src/components/ActiveFilterTags/`):** Dismissible Carbon tags displaying active filters with a "Clear all" action.
+  - **Shelves vs Filtered Grid:**
+    - Default state: Three shelves — "Recommended for You" (powered by `useRecommendations`; dynamically titled "Popular right now" for guest visitors), "Bestsellers this Month", and "New Launches".
+    - Filtered state: When any category, publisher, author, search query, or dropdown filter is active, shelves are replaced by a single "Results (n)" grid.
+    - Zero matches render `EmptyState` ("No books found") with a "Clear all filters" button.
+  - **BookCard Catalogue Variant (`src/components/BookCard/`):** Left-aligned `CoverPlaceholder`, book title linking to `/books/:id`, author link prefix "by <author>" linking to `/?author=`, 2-line truncated blurb with title tooltip, format badge (Paperback / Hardcover / eBook), comma-separated category links, whole rupee price in INR (`₹399`), and delivery status ("Instant download" for eBooks or "Delivery by <date>" for physical books).
+  - **CoverPlaceholder (`src/components/CoverPlaceholder/`):** Deterministic book-shaped coloured block with title, author, spine highlight, and visual motif tailored per book (matching screenshot 01 artwork styles and palettes).
+  - **Leaf Components (`src/components/`):** `AuthorLink`, `CategoryTags`, `PriceTag`, `DeliveryDate`, and `BookShelf` (supporting titled shelves, responsive grid, and Carbon skeleton loading states).
+  - **Responsive Layout (`src/pages/Home.scss`):**
+    - `≥1056px`: Persistent desktop sidebar and 3 cards per row.
+    - `672px – 1055px`: 2 cards per row, sidebar accessible via modal drawer toggled by "Categories" button.
+    - `<672px`: 1 card per row, category drawer, and mobile filter toggle button collapsing/expanding filters.
+- **Tests added (20 new, 123 total across 23 files):**
+  - `src/pages/Home.test.tsx`: Guest "Popular right now" vs authenticated "Recommended for You" shelf titles, category filtering, search query filtering, price low-to-high and high-to-low sorting, URL query synchronisation and clearing, EmptyState on 0 results, and publisher filtering from the sidebar.
+  - `src/components/BookCard/BookCard.test.tsx`: BookCard catalogue rendering (title, author, blurb, format, categories, price, delivery date) and eBook "Instant download" rendering.
+  - `src/components/CategorySidebar/CategorySidebar.test.tsx`: "All", category taxonomy, publishers group, active class, and callbacks.
+  - `src/components/FilterBar/FilterBar.test.tsx`: Search input, selects, and change handlers.
+  - `src/components/CoverPlaceholder/CoverPlaceholder.test.tsx`: Accessible role/label, visual title/author display, and fallback theme generator.
+  - `src/hooks/useCatalogueFilters.test.tsx`: Query parsing, active filter count, and filter mutation.
+  - `src/router/router.test.tsx`: Router test rendering `/` with real data and verifying AppHeader and catalogue shelf contents.
+- **Quality gates (all pass):**
+  - `npm run lint` — 0 errors, 0 warnings
+  - `npm run typecheck` — 0 errors
+  - `npm test` — 23 test files, 123 passed (0 failed)
+  - `npm run build` — ✓ built successfully for production
 
 ---
 

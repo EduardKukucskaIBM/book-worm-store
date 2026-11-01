@@ -1,0 +1,25 @@
+@use '@carbon/react/scss/spacing' as *;
+
+.active-filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $spacing-03;
+  margin-bottom: $spacing-05;
+  padding: $spacing-03 0;
+}
+
+.active-filter-tags__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $spacing-02;
+}
+
+.active-filter-tags__clear {
+  color: var(--cds-link-primary, #78a9ff);
+  font-size: 0.8125rem;
+  padding-left: $spacing-03;
+  padding-right: $spacing-03;
+  min-height: 2rem;
+}

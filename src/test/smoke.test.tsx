@@ -1,15 +1,21 @@
 import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
+import { AppProviders } from '../context/AppProviders'
 import Home from '../pages/Home'
 
-describe('ST1 scaffold smoke test', () => {
-  it('renders the Home page placeholder', () => {
+describe('Home page smoke test', () => {
+  it('renders the Home catalogue page', async () => {
     render(
-      <MemoryRouter>
-        <Home />
-      </MemoryRouter>,
+      <AppProviders>
+        <MemoryRouter>
+          <Home />
+        </MemoryRouter>
+      </AppProviders>,
     )
-    expect(screen.getByRole('heading', { name: /home \/ catalogue/i })).toBeInTheDocument()
+    expect(screen.getByTestId('home-page')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText('Bestsellers this Month')).toBeInTheDocument()
+    })
   })
 })

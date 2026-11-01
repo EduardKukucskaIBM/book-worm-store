@@ -1,0 +1,24 @@
+.author-link {
+  font-size: 0.875rem;
+  line-height: 1.3;
+  color: var(--cds-text-secondary, #c6c6c6);
+}
+
+.author-link__prefix {
+  color: var(--cds-text-secondary, #c6c6c6);
+}
+
+.author-link__name {
+  color: var(--cds-link-primary, #78a9ff);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    color: var(--cds-link-hover, #a6c8ff);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cds-focus, #0f62fe);
+    outline-offset: 2px;
+  }
+}

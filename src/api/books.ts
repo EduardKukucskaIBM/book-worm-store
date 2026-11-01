@@ -80,6 +80,7 @@ export async function getBooks(filters?: CatalogueFilters): Promise<Book[]> {
       return (
         book.title.toLowerCase().includes(query) ||
         book.description.toLowerCase().includes(query) ||
+        (book.longDescription && book.longDescription.toLowerCase().includes(query)) ||
         authorName.includes(query) ||
         (book.isbn && book.isbn.toLowerCase().includes(query))
       )

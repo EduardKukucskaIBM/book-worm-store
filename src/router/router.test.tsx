@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { routes } from './index'
 import { AppProviders } from '../context/AppProviders'
@@ -21,7 +21,7 @@ describe('App Router with Shell Layouts', () => {
     localStorage.clear()
   })
 
-  it('renders the header ("Book Worm" and cart button) on "/"', () => {
+  it('renders the header ("Book Worm" and cart button) and catalogue page with real data on "/"', async () => {
     renderRoute('/')
 
     // Header elements are present
@@ -29,8 +29,12 @@ describe('App Router with Shell Layouts', () => {
     expect(screen.getByText('Book Worm')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /shopping cart/i })).toBeInTheDocument()
 
-    // Page content is rendered inside the layout
-    expect(screen.getByRole('heading', { name: /home \/ catalogue/i })).toBeInTheDocument()
+    // Page content is rendered inside the layout with real data
+    expect(screen.getByTestId('home-page')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText('Bestsellers this Month')).toBeInTheDocument()
+      expect(screen.getAllByTestId('book-card-book-lost-kitten').length).toBeGreaterThan(0)
+    })
   })
 
   it('renders the header ("Book Worm" and cart button) on "/books/1"', () => {

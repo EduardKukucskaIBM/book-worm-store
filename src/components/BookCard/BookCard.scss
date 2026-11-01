@@ -1,0 +1,119 @@
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/breakpoint' as bp;
+
+.book-card {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: $spacing-05;
+  padding: $spacing-04;
+  background-color: transparent;
+  width: 100%;
+  box-sizing: border-box;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: var(--cds-layer-hover, rgba(255, 255, 255, 0.03));
+  }
+}
+
+.book-card__cover-wrapper {
+  flex-shrink: 0;
+}
+
+.book-card__cover-link {
+  display: block;
+  text-decoration: none;
+  border-radius: 2px;
+
+  &:focus-visible {
+    outline: 2px solid var(--cds-focus, #0f62fe);
+    outline-offset: 4px;
+  }
+}
+
+.book-card__content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: $spacing-02;
+  height: 100%;
+}
+
+.book-card__header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.book-card__title {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.book-card__title-link {
+  color: var(--cds-text-primary, #ffffff);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cds-focus, #0f62fe);
+    outline-offset: 2px;
+  }
+}
+
+.book-card__author {
+  font-size: 0.8125rem;
+}
+
+.book-card__blurb {
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  color: var(--cds-text-secondary, #c6c6c6);
+  margin: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.book-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 2px;
+}
+
+.book-card__format {
+  font-size: 0.8125rem;
+  color: var(--cds-text-secondary, #c6c6c6);
+}
+
+.book-card__categories {
+  font-size: 0.8125rem;
+}
+
+.book-card__footer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: $spacing-03;
+}
+
+.book-card__price {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.book-card__delivery {
+  font-size: 0.75rem;
+  color: var(--cds-text-secondary, #c6c6c6);
+}
