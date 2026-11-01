@@ -1,0 +1,21 @@
+[
+  {
+    "id": "user-demo",
+    "name": "Alex Morgan",
+    "email": "demo@bookworm.com",
+    "giftPoints": 250,
+    "savedAddress": {
+      "firstName": "Alex",
+      "lastName": "Morgan",
+      "email": "demo@bookworm.com",
+      "phoneCountryCode": "+91",
+      "phone": "9876543210",
+      "line1": "42 MG Road, Indiranagar",
+      "line2": "Apartment 304, Green Heights",
+      "city": "Bengaluru",
+      "pin": "560038",
+      "state": "Karnataka",
+      "country": "India"
+    }
+  }
+]

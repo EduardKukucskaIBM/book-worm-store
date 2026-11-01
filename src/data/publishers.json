@@ -1,0 +1,22 @@
+[
+  {
+    "id": "pub-abc",
+    "name": "ABC Publishers"
+  },
+  {
+    "id": "pub-horizon",
+    "name": "Horizon House"
+  },
+  {
+    "id": "pub-quill",
+    "name": "Crown & Quill Publishing"
+  },
+  {
+    "id": "pub-silverline",
+    "name": "Silverline Press"
+  },
+  {
+    "id": "pub-cedarwood",
+    "name": "Cedarwood Books"
+  }
+]

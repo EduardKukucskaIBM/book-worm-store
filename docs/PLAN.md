@@ -352,7 +352,7 @@ Each sub-task is independent enough to be implemented and reviewed on its own, i
 - **Expected outcomes:** JSON for the books shown in the designs (Art of Focus, Art of Learning, Path to Success, Midnight Hour, Beneath the Stars, Final Frontier, Joy of Minimalism, Vanishing House, Lost Kitten), their authors, at least two publishers, the categories in the sidebar (with Non-fiction → Self Help), and one demo user with a saved address, **250 gift points** and a seeded order history. Seeded order dates are generated relative to "now" at load, with at least one order inside the 48h window and one outside, so the cancel behaviour can be demonstrated. No cover art is imported (D7). Async `api/` functions return joined data.
 - **Todo:** write `types/`; author JSON; implement `api/` (list/filter/sort books, get book, related, publishers, authors, auth, orders, mock payment); implement `utils/` (money, dates incl. eBook "Instant download", pricing with `TAX_RATE` and `BOOKWORM100`, recommendations, cancellation, validation), all pure and taking `now` where relevant.
 - **Relevant context:** section 4, section 1 Config row.
-- **Status:** `[ ] pending`
+- **Status:** `[x] done`
 
 ### ST3 — App state: auth, cart, orders, wishlist
 - **Intent:** shared state with persistence.
@@ -445,6 +445,37 @@ _(append after each sub-task)_
   - `npm run typecheck` — 0 errors
   - `npm test` — 1 test file, 1 test passed (smoke test renders Home placeholder)
   - `npm run build` — ✓ built in ~13s; only non-fatal font-URL warnings from Carbon internals
+
+#### ST2 handover
+- **Domain model (`src/types/index.ts`):** Complete TypeScript definitions for `Book`, `Author`, `Publisher`, `Category`, `Review`, `User`, `Address`, `Order`, `OrderItem`, `CartItem`, `CartLine`, `PriceBreakdown`, `CatalogueFilters`, `SortOption`, and `BookWithDetails`.
+- **Mock datasets (`src/data/`):**
+  - `books.json`: 20 books across 6+ categories and 5 publishers, including all 9 design titles (*The Art of Focus* 399 Paperback, *The Art of Learning* 259 Paperback, *The Path to Success* 359 Paperback, *The Midnight Hour* 299 Paperback, *Beneath the Stars* 499 Hardcover, *The Final Frontier* 359 Paperback, *Joy of Minimalism* 149 Paperback, *The Vanishing House* 99 eBook, *The Lost Kitten* 339 Hardcover). *The Vanishing House* is the only eBook and omits `deliveryDays` (supporting instant download per D6).
+  - `categories.json`: 23 categories matching the sidebar taxonomy, with parent-child relationships (e.g. Non-Fiction → Self Help).
+  - `publishers.json`: 5 fictional publishers (*ABC Publishers*, *Horizon House*, *Crown & Quill Publishing*, *Silverline Press*, *Cedarwood Books*).
+  - `authors.json`: 14 authors including the 9 design authors (*Arjun Patel*, *Raj Patel*, *James Wright*, *James Adams*, *Jessica Martin*, *Laura Mitchell*, *Daniel Reed*, *Clara Nelson*, *Emily Parker*) with bios and book references.
+  - `users.json`: Demo user `demo@bookworm.com` with 250 gift points and saved Bengaluru address.
+  - `orders.json` & dynamic seeding: Seed order templates dynamically calculate `placedAt`, `cancellableUntil` (48h window), and `estimatedDelivery` relative to load-time `now`. The recent order contains *Joy of Minimalism* (₹149) + *The Path to Success* (₹359) for a ₹508 subtotal, matching the cart checkout design.
+- **Pure utilities (`src/utils/`):**
+  - `money.ts`: `formatMoney` (INR ₹ format) and `round2`.
+  - `dates.ts`: `getDeliveryDateLabel` (eBook → "Instant download", physical → formatted date), `formatDate`, `addDays`, `addHours`.
+  - `cancellation.ts`: `canCancel` (active when `status === 'confirmed'` and `now < cancellableUntil`), `getCancellationTimeRemaining`.
+  - `pricing.ts`: `calculatePricing` with 12% tax, `BOOKWORM100` coupon (₹100 off), and gift points cap `min(balance, floor(payableAfterCoupon))`.
+  - `recommendations.ts`: `getRecommendations` based on category/author/publisher overlap from past order items, with bestseller fallback for guests and users with no orders.
+  - `validation.ts`: `validateAddress`, `validateCard`, `validateUpi`, `validateReview`.
+- **Mock API layer (`src/api/`):**
+  - `books.ts`: `getBooks` (filtering by category, publisher, author, search query, format, language, price range, sorting), `getBookById` (joined relations), `getRelatedBooks`, `getBestsellers`, `getNewLaunches`, `addBookReview`.
+  - `categories.ts`: `getCategories`, `getCategoryById`.
+  - `publishers.ts`: `getPublishers`, `getPublisherById`.
+  - `authors.ts`: `getAuthors`, `getAuthorById`.
+  - `auth.ts`: `getDemoUser`, `login`, `getUserById`.
+  - `orders.ts`: `generateSeedOrders`, `getOrders`, `getOrderById`, `createOrder`, `cancelOrder`, `resetOrders`.
+  - `payment.ts`: `processPayment` mock gateway.
+- **Unit test suite (`src/utils/*.test.ts`, `src/api/*.test.ts`):** 7 test files, 51 tests covering pricing (12% tax, coupon, points cap), cancellation boundary times (47h59m and 48h01m), dates, recommendations, form validation, and mock API behavior.
+- **Quality gates (all pass):**
+  - `npm run lint` — 0 errors, 0 warnings
+  - `npm run typecheck` — 0 errors
+  - `npm test` — 7 test files, 51 passed
+  - `npm run build` — ✓ production build succeeded
 
 ---
 
