@@ -1,22 +1,23 @@
 import type { ReactElement } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 /**
- * Route guard that redirects unauthenticated users to /login.
- * In ST3 this will read from AuthContext; for now it always allows access
- * so that placeholder routing works during scaffold.
+ * Route guard: guests are sent to /login?redirect=<current path>, which the
+ * login page honours after a successful login.
  */
 interface RequireAuthProps {
   children: ReactElement
 }
 
 const RequireAuth = ({ children }: RequireAuthProps): ReactElement => {
+  const { isAuthenticated } = useAuth()
   const location = useLocation()
-  // ST3 will replace `false` with the real `isAuthenticated` from AuthContext.
-  const isAuthenticated = false
 
   if (!isAuthenticated) {
-    return <Navigate to={`/login?redirect=${encodeURIComponent(location.pathname)}`} replace />
+    // "/" is legal in a query string; keep it readable (…?redirect=/orders).
+    const target = encodeURIComponent(location.pathname + location.search).replace(/%2F/gi, '/')
+    return <Navigate to={`/login?redirect=${target}`} replace />
   }
 
   return children

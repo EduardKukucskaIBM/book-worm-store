@@ -14,3 +14,13 @@ export const DELIVERY_CHARGE = 0
 export const COUPONS: Record<string, number> = {
   BOOKWORM100: 100,
 }
+
+/** localStorage keys used by the app-state contexts. */
+export const STORAGE_KEYS = {
+  session: 'bookworm.session',
+  giftPointAdjustments: 'bookworm.giftPointAdjustments',
+  cart: 'bookworm.cart',
+  orders: 'bookworm.orders',
+  wishlist: 'bookworm.wishlist',
+} as const
+

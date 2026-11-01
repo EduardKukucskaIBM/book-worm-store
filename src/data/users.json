@@ -3,6 +3,7 @@
     "id": "user-demo",
     "name": "Alex Morgan",
     "email": "demo@bookworm.com",
+    "password": "bookworm123",
     "giftPoints": 250,
     "savedAddress": {
       "firstName": "Alex",

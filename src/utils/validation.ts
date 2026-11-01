@@ -176,3 +176,28 @@ export function validateReview(text: string, rating: number): { text?: string; r
 
   return errors
 }
+
+export interface LoginValidationErrors {
+  email?: string
+  password?: string
+}
+
+/**
+ * Validate the login form inputs (presence and e-mail format only).
+ */
+export function validateLogin(email: string, password: string): LoginValidationErrors {
+  const errors: LoginValidationErrors = {}
+  const trimmedEmail = email.trim()
+
+  if (!trimmedEmail) {
+    errors.email = 'Email address is required'
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+    errors.email = 'Please enter a valid email address'
+  }
+
+  if (!password) {
+    errors.password = 'Password is required'
+  }
+
+  return errors
+}

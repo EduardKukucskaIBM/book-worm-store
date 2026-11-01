@@ -359,7 +359,7 @@ Each sub-task is independent enough to be implemented and reviewed on its own, i
 - **Expected outcomes:** optional login/logout; add/update/remove cart items with the header badge; cart survives login; orders (guest and user) persisted; gift-point balance changes persisted on top of the seed data; wishlist persisted.
 - **Todo:** `AuthContext`, `CartContext`, `OrdersContext`, `WishlistContext` with `localStorage` persistence; wire `RequireAuth` for `/orders`; build `LoginForm` and the `/login` page.
 - **Relevant context:** J1, J5.
-- **Status:** `[ ] pending`
+- **Status:** `[x] done`
 
 ### ST4 — App shell
 - **Intent:** shared chrome used by every screen.
@@ -476,6 +476,25 @@ _(append after each sub-task)_
   - `npm run typecheck` — 0 errors
   - `npm test` — 7 test files, 51 passed
   - `npm run build` — ✓ production build succeeded
+
+#### ST3 handover
+- **Providers:** `src/context/` holds `AuthContext`, `CartContext`, `OrdersContext`, `WishlistContext` (context object + `useX()` hook, in `.ts` files) and matching `XProvider.tsx` files, so `react-refresh/only-export-components` stays clean. `AppProviders` composes them (Auth → Cart → Wishlist → Orders; Orders is inside Auth because cancel refunds points) and wraps the router in `src/App.tsx`. Import from `src/context` (barrel). Hooks throw if used outside a provider. **Tests/pages that use any hook must render inside `<AppProviders>`** — ST12 should add the provider-aware render helper in `src/test/`.
+- **Auth:** `useAuth()` → `{ user, isAuthenticated, login(email, password), logout(), adjustGiftPoints(userId, delta) }`. `login` rejects with `Error('Invalid email or password')` (`INVALID_CREDENTIALS_MESSAGE`). **Behaviour change in ST2 API:** `api/auth.login` now checks the password against `users.json` and throws on mismatch; the old "accept any e-mail" fallback was removed. `users.json` gained a mock `password` field (`bookworm123`); it is stripped by `toUser()` and never leaves `api/auth.ts` or reaches `localStorage`. `getDemoCredentials()` feeds the hint on `/login`.
+- **Gift points:** the session stores the seed user; point changes are stored separately as a per-user delta (`bookworm.giftPointAdjustments`) and applied on top, so `user.giftPoints` is always seed + delta (floored at 0). ST7/ST8 should call `useOrders().addOrder(...)`, which already spends `order.giftPointsRedeemed`, rather than calling `adjustGiftPoints` directly.
+- **Cart:** `useCart()` → `{ items, lines, itemCount, addItem(id, qty = 1), setQuantity(id, qty), removeItem(id), clearCart() }`. `setQuantity` clamps to ≥ 1 (removal is explicit via `removeItem`). `items` (ids + quantities) is what is persisted and is available synchronously; `lines` (`CartLine[]` with `Book`) is resolved from `api/books` **asynchronously and only once the cart is non-empty**, so it is briefly empty after a refresh. Use `itemCount` for the header badge (ST4) and `lines` for pricing/display. Unknown book ids are dropped from `lines` but kept in `items`. The cart is not touched by login/logout.
+- **Orders:** `useOrders()` → `{ orders, getOrdersForUser(userId | null), getOrder(id), addOrder(input, now?), cancelOrder(id, now?) }`, synchronous. Only **new orders and cancelled ids** are persisted (`bookworm.orders`); seed orders are regenerated relative to "now" on every load so the demo always has an order inside the 48h window. A cancelled seed order stays cancelled via its id. `cancelOrder` throws if the order is missing or `canCancel` is false, otherwise refunds gift points. **Gap for ST9:** `cancelOrder` returns the cancelled order but UI should still check `canCancel` first to disable the control. Context state is independent of the in-memory `api/orders` store (`createOrder`/`cancelOrder` there are unused by the UI); `api/orders.ts` gained the pure `buildOrder()` and `NewOrderInput` type that the provider uses.
+- **Wishlist:** `useWishlist()` → `{ bookIds, isWishlisted(id), toggle(id) }`, persisted as `bookworm.wishlist`.
+- **Persistence:** keys live in `STORAGE_KEYS` (`config/`); `utils/storage.ts` (`loadJSON` with a type guard, `saveJSON`, `removeItem`) is best-effort and falls back on corrupt/invalid data. Session key is `bookworm.session`. Guests' orders are stored with `userId: null`.
+- **`RequireAuth`:** now reads `useAuth()`. A guest hitting `/orders` is redirected to `/login?redirect=/orders` (slashes left unescaped for readability; query string preserved).
+- **`/login`:** Carbon `TextInput`, `PasswordInput`, `Button`, inline field errors (`validateLogin` in `utils/validation`), an `InlineNotification` for wrong credentials, and a demo-credentials hint, on the g100 theme (`Login.scss`, Carbon tokens). `?redirect=` is honoured via `getSafeRedirect` (`utils/redirect.ts`, same-origin paths only; falls back to `/`). A logged-in visitor to `/login` is redirected immediately. No `LoginForm` component was split out: the form lives in `pages/Login.tsx`; extract it only if ST4/ST11 needs to.
+- **Not done (belongs to later tasks):** header badge/user menu/Logout button (ST4), `Add to cart` / wishlist buttons (ST5–ST6), checkout/payment wiring that calls `addOrder` and `clearCart` (ST7–ST9).
+- **Tests added (36 new, 88 total in 14 files):** `CartContext` (add/increment, set quantity min 1, remove, clear, joined lines, persistence, refresh, corrupt data), `AuthContext` (login, bad credentials, case/space handling, no password leakage, logout, session persistence, gift-point persistence, **cart kept across login and logout**), `OrdersContext` (seeds, persistence, points spent/refunded, cancel window), `WishlistContext`, `RequireAuth` (guest redirected to `/login?redirect=/orders`; logged-in user passes), `Login` page (hint, inline errors, bad credentials, `?redirect=`, unsafe redirect), `getSafeRedirect`.
+- **Test note:** cart tests flush the provider's async catalogue load inside `act()` (see `run()` in `CartContext.test.tsx`) to avoid "not wrapped in act" warnings.
+- **Quality gates (all pass):**
+  - `npm run lint` — 0 errors, 0 warnings
+  - `npm run typecheck` — 0 errors
+  - `npm test` — 14 test files, 88 passed
+  - `npm run build` — ✓ built in ~36s; only the known non-fatal Carbon font-URL warnings
 
 ---
 

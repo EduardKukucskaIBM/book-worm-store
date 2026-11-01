@@ -72,20 +72,22 @@ export async function getOrderById(orderId: string): Promise<Order | null> {
   return order ? { ...order } : null
 }
 
-export async function createOrder(
-  orderInput: Omit<Order, 'id' | 'placedAt' | 'cancellableUntil'>,
-  now: Date = new Date()
-): Promise<Order> {
-  const placedAtDate = now
-  const cancellableUntilDate = addHours(placedAtDate, CANCEL_WINDOW_HOURS)
+export type NewOrderInput = Omit<Order, 'id' | 'placedAt' | 'cancellableUntil'>
 
-  const newOrder: Order = {
+/** Pure order factory: adds id, placedAt and the 48h cancel deadline. */
+export function buildOrder(orderInput: NewOrderInput, now: Date = new Date()): Order {
+  const cancellableUntilDate = addHours(now, CANCEL_WINDOW_HOURS)
+
+  return {
     ...orderInput,
     id: `ord-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
-    placedAt: placedAtDate.toISOString(),
+    placedAt: now.toISOString(),
     cancellableUntil: cancellableUntilDate.toISOString(),
   }
+}
 
+export async function createOrder(orderInput: NewOrderInput, now: Date = new Date()): Promise<Order> {
+  const newOrder = buildOrder(orderInput, now)
   runtimeOrders.unshift(newOrder)
   return newOrder
 }
