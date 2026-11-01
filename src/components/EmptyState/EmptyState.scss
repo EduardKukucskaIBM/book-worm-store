@@ -1,0 +1,44 @@
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/type' as *;
+
+.app-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: $spacing-09 $spacing-05;
+  background-color: var(--cds-layer-01);
+  border: 1px dashed var(--cds-border-subtle-01);
+  color: var(--cds-text-primary);
+  width: 100%;
+}
+
+.app-empty-state__icon-wrapper {
+  margin-bottom: $spacing-05;
+  color: var(--cds-icon-secondary);
+}
+
+.app-empty-state__icon {
+  fill: currentColor;
+}
+
+.app-empty-state__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: $spacing-03;
+  color: var(--cds-text-primary);
+}
+
+.app-empty-state__description {
+  font-size: 0.875rem;
+  color: var(--cds-text-secondary);
+  max-width: 28rem;
+  margin-bottom: $spacing-06;
+  line-height: 1.375rem;
+}
+
+.app-empty-state__action {
+  display: flex;
+  justify-content: center;
+}

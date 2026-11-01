@@ -365,7 +365,7 @@ Each sub-task is independent enough to be implemented and reviewed on its own, i
 - **Intent:** shared chrome used by every screen.
 - **Expected outcomes:** `AppHeader` (nav, cart badge, user menu), `PageLayout`, `BackdropLayout` (CSS-generated background), `Breadcrumbs`, `EmptyState`; responsive header per section 5.
 - **Relevant context:** screenshots 01–05 header; section 3 Layout.
-- **Status:** `[ ] pending`
+- **Status:** `[x] done`
 
 ### ST5 — Home and catalogue
 - **Intent:** J2, J3, J6.
@@ -495,6 +495,27 @@ _(append after each sub-task)_
   - `npm run typecheck` — 0 errors
   - `npm test` — 14 test files, 88 passed
   - `npm run build` — ✓ built in ~36s; only the known non-fatal Carbon font-URL warnings
+
+#### ST4 handover
+- **AppHeader (`src/components/AppHeader/`):** Carbon UI shell header with "Book Worm" brand logo and link to `/`, desktop navigation links (`My Orders`, `My Wishlist`, `My Writers`), cart icon button with dynamic item-count badge from `useCart().itemCount`, and user icon.
+  - **Guest vs Auth user:** Guests see a link with `aria-label="Log in"` leading to `/login`. Logged-in users see an interactive user menu displaying their name (`user.name`), email (`user.email`), and a `Logout` button wired to `useAuth().logout()`.
+  - **Responsive navigation:** On screens below Carbon `lg` (1056px), nav links move into a slide-out `SideNav` drawer toggled by the hamburger `HeaderMenuButton`. Brand logo, cart badge, and user action remain permanently visible in the header bar.
+  - **Accessibility:** Visible focus rings via Carbon focus tokens, `SkipToContent` link targeting `#main-content`, keyboard navigation with `Escape` dismissal for user menu and side panel.
+- **PageLayout (`src/components/PageLayout/`):** Standard page layout shell rendering `AppHeader`, optional breadcrumb slot, and max-width 1440px (90rem) `#main-content` landmark with responsive spacing. Supports layout route mode via `<Outlet />`.
+- **BackdropLayout (`src/components/BackdropLayout/`):** Full-bleed atmospheric background for Payment and Confirmation flows, featuring pure CSS-generated radial and linear gradients with Carbon theme tokens (no external design image assets per D7) and a centred card slot. Supports layout route mode via `<Outlet />`.
+- **Router wiring (`src/router/index.tsx`):**
+  - `PageLayout` is wired as the layout route for `/`, `/books/:bookId`, `/checkout`, `/login`, `/orders`, `/wishlist`, `/writers`, and `*`.
+  - `BackdropLayout` is wired as the layout route for `/payment` and `/confirmation/:orderId`.
+- **Breadcrumbs (`src/components/Breadcrumbs/`):** Accessible Carbon `Breadcrumb` wrapper integrating with React Router `Link` and active current page highlighting.
+- **EmptyState (`src/components/EmptyState/`):** Reusable empty-state component for empty cart, no orders, empty wishlist, and zero search results, supporting optional icons, descriptions, and action links/buttons.
+- **Component barrel (`src/components/index.ts`):** Central export point for all shell and layout components.
+- **Test environment update (`src/test/setup.ts`):** Added a mock for `window.matchMedia` required by Carbon's UI shell responsive hooks under jsdom.
+- **Tests added (15 new, 103 total across 17 files):** `AppHeader.test.tsx` (brand logo, navigation links, cart badge count display & empty-state hide, guest login link, logged-in user menu with name & email & Logout action, Escape key dismiss, hamburger mobile drawer toggle), `shell.test.tsx` (`PageLayout` breadcrumb & content rendering, `BackdropLayout` card rendering, `Breadcrumbs` navigation, `EmptyState` actions), and `src/router/router.test.tsx` (verifying header presence on `/`, `/books/1`, `/payment`, and `/confirmation/order-1`).
+- **Quality gates (all pass):**
+  - `npm run lint` — 0 errors, 0 warnings
+  - `npm run typecheck` — 0 errors
+  - `npm test` — 17 test files, 103 passed
+  - `npm run build` — ✓ built successfully
 
 ---
 

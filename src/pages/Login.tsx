@@ -44,7 +44,7 @@ const Login = (): ReactElement => {
   }
 
   return (
-    <main className="login-page">
+    <div className="login-page">
       <Tile className="login-page__card">
         <form noValidate onSubmit={(e) => void handleSubmit(e)}>
           <Stack gap={6}>
@@ -99,7 +99,7 @@ const Login = (): ReactElement => {
           </Stack>
         </form>
       </Tile>
-    </main>
+    </div>
   )
 }
 
