@@ -345,7 +345,7 @@ Each sub-task is independent enough to be implemented and reviewed on its own, i
   4. Add ESLint and a `typecheck` script.
   5. Add Vitest + React Testing Library + jest-dom + user-event + jsdom, `test/setup.ts`, and a `test` script.
 - **Relevant context:** section 1, section 2.
-- **Status:** `[ ] pending`
+- **Status:** `[x] done`
 
 ### ST2 — Domain types, mock data and API layer
 - **Intent:** a typed data foundation matching the designs.
@@ -432,6 +432,19 @@ Each sub-task is independent enough to be implemented and reviewed on its own, i
 
 ### Handover notes
 _(append after each sub-task)_
+
+#### ST1 handover
+- **React version:** React **19.3.1** was installed (npm resolved the latest Vite template deps). The plan said 18; React 19 is a drop-in compatible upgrade — no code changes needed. Note this in any team communication.
+- **TypeScript version:** TypeScript **7** was initially installed but downgraded to **5.8.3** because `@typescript-eslint` v8 does not yet support TS7. This is the version to keep for all subsequent sub-tasks.
+- **Sass g100 theme:** Carbon v11 (1.119.0) does not allow `@use '@carbon/react/scss/theme' with ($theme: ...)` after `@use '@carbon/react'` has already loaded the theme module. The g100 theme is instead applied via the React `<Theme theme="g100">` wrapper in `src/App.tsx`, which sets Carbon's CSS custom properties. The Sass entry (`src/styles/_theme.scss`) only runs `@use '@carbon/react'` for the global reset and type tokens.
+- **IBM Plex Sans fonts:** Carbon bundles `@ibm/plex` but Vite/Rolldown emits non-fatal warnings about unresolved `~@ibm/plex/...` tilde URLs at build time. These are resolved by the browser at runtime. No action needed in ST2; revisit only if fonts are missing in production.
+- **Folder layout created:** `src/api/`, `src/config/`, `src/context/`, `src/components/`, `src/data/`, `src/hooks/`, `src/pages/`, `src/router/`, `src/styles/`, `src/test/`, `src/types/`, `src/utils/`. Each stub folder has a `.gitkeep` comment file.
+- **`RequireAuth` stub:** currently redirects everyone (hardcoded `isAuthenticated = false`). ST3 must replace the constant with `AuthContext` state. Until ST3 lands, `/orders` will always redirect to login — this is intentional for scaffold; it does not block any other route.
+- **Quality gates (all pass):**
+  - `npm run lint` — 0 errors, 0 warnings
+  - `npm run typecheck` — 0 errors
+  - `npm test` — 1 test file, 1 test passed (smoke test renders Home placeholder)
+  - `npm run build` — ✓ built in ~13s; only non-fatal font-URL warnings from Carbon internals
 
 ---
 

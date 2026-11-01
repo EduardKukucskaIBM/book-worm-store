@@ -1,0 +1,12 @@
+// Carbon g100 theme entry
+// The g100 dark theme is applied via the React <Theme theme="g100"> wrapper
+// in App.tsx (CSS custom properties). This Sass file only imports the Carbon
+// style foundation — no configuration-with needed here.
+@use '@carbon/react';
+
+// Ensure the app fills the viewport with the correct background
+#root {
+  min-height: 100dvh;
+  background-color: var(--cds-background, #161616);
+  color: var(--cds-text-primary, #f4f4f4);
+}
