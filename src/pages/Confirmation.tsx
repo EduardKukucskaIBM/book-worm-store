@@ -60,6 +60,7 @@ export const Confirmation = ({ now }: ConfirmationProps): ReactElement => {
       >
         <EmptyState
           title="Order not found"
+          titleAs="h1"
           description="We couldn't find the order you are looking for."
           action={{ label: 'Back to catalogue', to: '/' }}
           data-testid="order-not-found"

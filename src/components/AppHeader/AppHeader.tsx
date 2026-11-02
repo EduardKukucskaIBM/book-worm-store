@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
-import type { ReactElement, KeyboardEvent as ReactKeyboardEvent } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import type { ReactElement } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import {
   Header,
@@ -42,7 +42,7 @@ export const AppHeader = ({ className }: AppHeaderProps): ReactElement => {
   const userMenuRef = useRef<HTMLDivElement>(null)
   const userButtonRef = useRef<HTMLButtonElement>(null)
 
-  // Close user menu when clicking outside
+  // Close user menu when clicking outside or pressing Escape
   useEffect(() => {
     if (!isUserMenuOpen) return
 
@@ -52,22 +52,23 @@ export const AppHeader = ({ className }: AppHeaderProps): ReactElement => {
       }
     }
 
+    const handleKeyDown = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        setIsUserMenuOpen(false)
+        userButtonRef.current?.focus()
+      }
+    }
+
     document.addEventListener('mousedown', handlePointerDown)
     document.addEventListener('touchstart', handlePointerDown)
+    document.addEventListener('keydown', handleKeyDown)
     return () => {
       document.removeEventListener('mousedown', handlePointerDown)
       document.removeEventListener('touchstart', handlePointerDown)
+      document.removeEventListener('keydown', handleKeyDown)
     }
   }, [isUserMenuOpen])
-
-  // Handle keyboard events on user menu (e.g. Escape to close)
-  const handleUserMenuKeyDown = useCallback((event: ReactKeyboardEvent): void => {
-    if (event.key === 'Escape') {
-      event.preventDefault()
-      setIsUserMenuOpen(false)
-      userButtonRef.current?.focus()
-    }
-  }, [])
 
   const handleLogout = (): void => {
     logout()
@@ -131,11 +132,7 @@ export const AppHeader = ({ className }: AppHeaderProps): ReactElement => {
         </Link>
 
         {isAuthenticated && user ? (
-          <div
-            className="app-header__user-menu-container"
-            ref={userMenuRef}
-            onKeyDown={handleUserMenuKeyDown}
-          >
+          <div className="app-header__user-menu-container" ref={userMenuRef}>
             <HeaderGlobalAction
               ref={userButtonRef}
               aria-label={`User menu for ${user.name}`}

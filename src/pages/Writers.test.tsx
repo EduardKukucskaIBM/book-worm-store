@@ -94,7 +94,7 @@ describe('Writers page', () => {
     renderWriters()
     await waitFor(() => {
       const cards = screen.getAllByTestId(/^writer-card-/)
-      const names = cards.map((c) => c.getAttribute('aria-label')?.split(',')[0] ?? '')
+      const names = cards.map((c) => c.querySelector('.writer-card__name')?.textContent ?? '')
       // Verify sorted order
       const sorted = [...names].sort((a, b) => a.localeCompare(b))
       expect(names).toEqual(sorted)

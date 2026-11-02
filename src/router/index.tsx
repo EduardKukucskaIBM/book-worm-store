@@ -4,44 +4,55 @@ import type { RouteObject } from 'react-router-dom'
 import PageLayout from '../components/PageLayout/PageLayout'
 import BackdropLayout from '../components/BackdropLayout/BackdropLayout'
 import RequireAuth from '../components/RequireAuth'
-
-import Home from '../pages/Home'
-import ProductDetail from '../pages/ProductDetail'
-import Checkout from '../pages/Checkout'
-import Payment from '../pages/Payment'
-import Confirmation from '../pages/Confirmation'
-import Login from '../pages/Login'
-import Orders from '../pages/Orders'
-import Wishlist from '../pages/Wishlist'
-import Writers from '../pages/Writers'
-import NotFound from '../pages/NotFound'
+import RootLayout from './RootLayout'
+import {
+  Home,
+  ProductDetail,
+  Checkout,
+  Payment,
+  Confirmation,
+  Login,
+  Orders,
+  Wishlist,
+  Writers,
+  NotFound,
+} from './lazyPages'
 
 export const routes: RouteObject[] = [
   {
-    element: <PageLayout />,
+    element: <RootLayout />,
     children: [
-      { path: '/', element: <Home /> },
-      { path: '/books/:bookId', element: <ProductDetail /> },
-      { path: '/checkout', element: <Checkout /> },
-      { path: '/login', element: <Login /> },
       {
-        path: '/orders',
-        element: (
-          <RequireAuth>
-            <Orders />
-          </RequireAuth>
-        ),
+        // Home owns its spacing so the category sidebar can sit flush against the viewport edge
+        element: <PageLayout fullBleed />,
+        children: [{ path: '/', element: <Home /> }],
       },
-      { path: '/wishlist', element: <Wishlist /> },
-      { path: '/writers', element: <Writers /> },
-      { path: '*', element: <NotFound /> },
-    ],
-  },
-  {
-    element: <BackdropLayout />,
-    children: [
-      { path: '/payment', element: <Payment /> },
-      { path: '/confirmation/:orderId', element: <Confirmation /> },
+      {
+        element: <PageLayout />,
+        children: [
+          { path: '/books/:bookId', element: <ProductDetail /> },
+          { path: '/checkout', element: <Checkout /> },
+          { path: '/login', element: <Login /> },
+          {
+            path: '/orders',
+            element: (
+              <RequireAuth>
+                <Orders />
+              </RequireAuth>
+            ),
+          },
+          { path: '/wishlist', element: <Wishlist /> },
+          { path: '/writers', element: <Writers /> },
+          { path: '*', element: <NotFound /> },
+        ],
+      },
+      {
+        element: <BackdropLayout />,
+        children: [
+          { path: '/payment', element: <Payment /> },
+          { path: '/confirmation/:orderId', element: <Confirmation /> },
+        ],
+      },
     ],
   },
 ]

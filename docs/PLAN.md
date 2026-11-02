@@ -1,6 +1,6 @@
 # Book Worm — Front-End Plan
 
-Status: **decisions incorporated, awaiting go-ahead** (no code written yet)
+Status: **ST1-ST11 done; ST12 (unit and component tests) pending**
 
 ## 0. Overview
 
@@ -415,7 +415,7 @@ Each sub-task is independent enough to be implemented and reviewed on its own, i
   - **Lighthouse accessibility score ≥ 90** on every route, run against a production build (`vite build` + `vite preview`).
   - Keyboard access and focus order, form labels and contrast reviewed.
   - `npm run lint`, `typecheck` and `build` pass with no warnings.
-- **Status:** `[ ] pending`
+- **Status:** `[x] done`
 
 ### ST12 — Unit and component tests
 - **Intent:** lock in the business rules with Vitest + React Testing Library.
@@ -672,8 +672,49 @@ _(append after each sub-task)_
   - `npm test -- --run --sequence.concurrent=false` — 33 test files, 250 passed (new tests only: 32 passed in 3 new files)
   - `npm run build` — ✓ built in ~37s; pre-existing large-chunk and Carbon font-URL warnings only
 
+#### ST11 handover
+- **Home layout (issue 1):** `PageLayout` has a new `fullBleed` prop (`.page-layout--full-bleed`: no `max-width`, no centring, no page padding). Home uses it, so the 16rem category sidebar sits flush against the left viewport edge at every width (measured `left: 0`, width 256 at 1440 and 1920) and the content column carries its own padding. Below lg the sidebar becomes the existing drawer (now a proper dialog: scrim button, `role="dialog"`, Escape closes, focus moves to the close button and returns to the opener).
+- **Related Reads (issue 2):** all 20 books resolve their `relatedBookIds`. `src/data/dataIntegrity.test.ts` fails if any `relatedBookIds`, `authorId`, `publisherId` or `categoryIds` (also `Author.bookIds`) point at a missing id. `RelatedReads` shows **"No related reads yet"** when there are no valid related books; `ProductDetail` now always renders it (sidebar on lg, inline below).
+- **Scroll restoration (issue 3):** `src/components/ScrollToTop/ScrollToTop.tsx` lives in `src/router/RootLayout.tsx` and calls `window.scrollTo(0, 0)` only when `pathname` changes (not on first render, not on search/hash changes). Tested through `RootLayout` in `ScrollToTop.test.tsx`.
+- **Bundle size (issue 4):**
+  - Routes are lazy (`src/router/lazyPages.ts`, `React.lazy`); `PageLayout` and `BackdropLayout` wrap `<Outlet/>` in `Suspense` with `PageLoading` (Carbon `Loading`, `src/components/PageLoading/`).
+  - Carbon styles: `src/styles/_theme.scss` no longer does `@use '@carbon/react'`. It `@use`s the foundation (reset, type, fonts, layer, layout, zone) and only these component partials: breadcrumb, button, checkbox, form, inline-loading, link, loading, modal, notification, number-input, popover, radio-button, search, select, skeleton-styles, stack, tag, text-input, tile, tooltip, ui-shell. **If a new Carbon component is used, add its partial there**, otherwise it renders unstyled.
+  - Sizes (`vite build`):
+
+    | | Before | After |
+    | --- | --- | --- |
+    | CSS (main file) | 1,274.59 kB (gzip 119.53) | 421.74 kB (gzip 38.89) |
+    | CSS total, all files | 1,274.59 kB | ≈ 465.5 kB |
+    | Largest JS chunk | 621.66 kB (gzip 184.43), single chunk | 268.51 kB (gzip 83.94) |
+    | Next JS chunk | – | 100.78 kB |
+    | JS total | 621.66 kB | ≈ 642.2 kB in ~45 chunks (split, loaded on demand) |
+    | Large-chunk warning | yes | none (no chunk > 500 kB) |
+- **Accessibility (issue 5):**
+  - `eslint-plugin-jsx-a11y` (`^6.10.2`, recommended rules) is in `eslint.config.js`; all findings fixed (AppHeader Escape via document listener, redundant `role="list"`, `PaymentMethodTabs` per-tab keyboard handler that also moves focus, Home drawer).
+  - One `h1` per page: Home has a visually hidden "Book Worm catalogue" h1 (`.visually-hidden` utility in `_theme.scss`); nested `<main>` removed from `ProductDetail` and `NotFound`; `EmptyState` has a `titleAs` prop (h1 for "Book not found" / "Order not found"); the sidebar "Publishers" title is an h2.
+  - Landmarks: header / nav / `main` (from the layouts) / `aside`; every form control has a label (Carbon `labelText` or a `<label htmlFor>`); decorative SVGs are `aria-hidden`; the writer card no longer has an `aria-label` that contradicted its visible text.
+  - Contrast/target size: the Lost Kitten cover is `#9c3e00` (was `#eb6200`, 3.3:1), writer avatar uses `--cds-button-primary`, sidebar group title and review placeholder use lighter text tokens, `.book-card__title-link` and `.category-tags__link` are ≥ 24px tall. Focus rings are visible everywhere (`:focus-visible` outlines; the review textarea replaces its outline with a 2px focus outline).
+- **Lighthouse accessibility** (Chrome headless, `vite build` + `vite preview`, desktop and mobile): **100 on every route**: `/`, `/?category=…`, `/books/:id`, `/checkout` (empty and with items), `/payment`, `/confirmation/:id`, `/login`, `/orders` (logged in), `/wishlist`, `/writers`, 404. Before the final fixes the lowest was 91 (`/`).
+- **Responsive (issue 6):** every route was loaded at 390 / 820 / 1440px in headless Chrome and `scrollWidth === clientWidth` was checked (42 route/width combinations, zero overflow). The only overflow found was the product-detail gallery at 390px (front 240px + back panel = 436px); `BookGallery.scss` now wraps (`flex-wrap`, `max-width: 100%`, `min-width: min(100%, 12rem)` on the back). Layout was visually compared with designs 01 and 02.
+- **Tests:** 12 new tests (262 total across 36 files): `dataIntegrity.test.ts`, `RelatedReads.test.tsx`, `ScrollToTop.test.tsx`. `router.test.tsx` now awaits lazy pages (`findByTestId`); the Writers sort test reads the name element instead of the removed `aria-label`. **Plain `npm test` now passes** without `--sequence.concurrent=false`: `vitest.config.ts` sets `testTimeout`/`hookTimeout` to 20000 ms (the Payment/Checkout flake was `userEvent.type` exceeding the 5 s default under parallel load) and `src/test/setup.ts` sets `asyncUtilTimeout` to 10000 ms for lazy chunk loads.
+- **Audit tooling:** the puppeteer-core / Lighthouse scripts used for the measurements above were local-only (installed with `--no-save`) and have been removed from the repo; to repeat: `npm run build`, `npx vite preview --port 4173`, then drive Chrome with `puppeteer-core` + `lighthouse`.
+- **Not done / for later:** full manual screen-reader pass; the header brand icon sits close to the "Book Worm" text (cosmetic); ST12 (unit and component tests) is untouched.
+- **Quality gates (all pass):**
+  - `npm run lint`: 0 errors, 0 warnings
+  - `npm run typecheck`: 0 errors
+  - `npm test` (plain): 36 files, 262 passed
+  - `npm run build`: ✓ built, no large-chunk warning
+
 ---
 
+## Known limitations
+
+- **Mock payment:** there is no payment gateway. Pay Now simulates a 1.5 s delay; card `4000-0000-0000-0002` always fails and every other valid input succeeds. Card data is validated but never stored or sent anywhere.
+- **Mock authentication:** login checks the credentials against the seeded demo user with a hard-coded demo password in the client bundle. The session is a plain `localStorage` entry (`bookworm.session`) with no token, expiry or server check. This is a demo, not a security boundary.
+- **Guest orders are viewable by anyone with the link:** guest orders are stored with `userId: null` and `/confirmation/:orderId` shows them to whoever knows the order id, with no ownership check. Orders of a logged-in user are only shown to that user. All data (cart, orders, wishlist, reviews) lives in the browser's `localStorage`, so it is per-browser and not shared or secure.
+- **No backend:** catalogue data is static JSON; stock, prices and delivery dates are not re-checked at payment time.
+
+---
 ## 8. Decisions and design notes
 
 ### 8.1 Decisions

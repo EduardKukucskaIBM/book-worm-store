@@ -3,6 +3,8 @@
   flex-direction: row;
   gap: var(--cds-spacing-04, 1rem);
   align-items: flex-start;
+  flex-wrap: wrap; // stacks the covers on narrow screens instead of overflowing
+  max-width: 100%;
 
   &__front {
     flex: 0 0 auto;
@@ -17,6 +19,7 @@
     flex: 1 1 auto;
     min-height: 240px;
     max-width: 260px;
+    min-width: min(100%, 12rem);
     border-radius: 2px;
     overflow: hidden;
   }

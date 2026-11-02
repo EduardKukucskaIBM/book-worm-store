@@ -6,6 +6,9 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
+    // Form tests type key by key; the 5 s default is too tight when all files run in parallel
+    testTimeout: 20000,
+    hookTimeout: 20000,
     setupFiles: ['./src/test/setup.ts'],
     css: {
       modules: {

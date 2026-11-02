@@ -43,7 +43,7 @@
     outline: none;
 
     &::placeholder {
-      color: var(--cds-text-placeholder, #6f6f6f);
+      color: var(--cds-text-helper, #a8a8a8);
     }
 
     &:focus {

@@ -73,7 +73,7 @@ export const CategorySidebar = ({
   return (
     <aside className={`category-sidebar ${className}`.trim()} aria-label="Book Categories and Publishers">
       <nav className="category-sidebar__nav">
-        <ul className="category-sidebar__list" role="list">
+        <ul className="category-sidebar__list">
           <li className="category-sidebar__item-wrapper">
             <button
               type="button"
@@ -109,8 +109,8 @@ export const CategorySidebar = ({
 
         {publishers.length > 0 && (
           <div className="category-sidebar__group">
-            <h4 className="category-sidebar__group-title">Publishers</h4>
-            <ul className="category-sidebar__list" role="list">
+            <h2 className="category-sidebar__group-title">Publishers</h2>
+            <ul className="category-sidebar__list">
               {publishers.map((pub) => {
                 const isPubActive = selectedPublisher === pub.id
 

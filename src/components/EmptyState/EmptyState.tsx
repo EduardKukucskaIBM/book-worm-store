@@ -12,6 +12,8 @@ export interface EmptyStateAction {
 
 export interface EmptyStateProps {
   title: string
+  /** Heading level of the title. Use "h1" when the empty state is the whole page content. Defaults to "h2". */
+  titleAs?: 'h1' | 'h2'
   description?: string
   icon?: ComponentType<{ size?: number; className?: string; 'aria-hidden'?: 'true' | 'false' }>
   action?: EmptyStateAction
@@ -21,6 +23,7 @@ export interface EmptyStateProps {
 
 export const EmptyState = ({
   title,
+  titleAs: Title = 'h2',
   description,
   icon: Icon,
   action,
@@ -37,7 +40,7 @@ export const EmptyState = ({
           <Icon size={48} className="app-empty-state__icon" />
         </div>
       )}
-      <h2 className="app-empty-state__title">{title}</h2>
+      <Title className="app-empty-state__title">{title}</Title>
       {description && <p className="app-empty-state__description">{description}</p>}
       {action && (
         <div className="app-empty-state__action">

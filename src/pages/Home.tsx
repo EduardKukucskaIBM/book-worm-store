@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo, type ReactElement } from 'react'
+import { useState, useEffect, useMemo, useRef, type ReactElement } from 'react'
 import { Button } from '@carbon/react'
-import { Filter, List } from '@carbon/icons-react'
+import { Close, Filter, List } from '@carbon/icons-react'
 import { Author, Book, Category, Publisher } from '../types'
 import { getBooks, getCategories, getPublishers, getAuthors, getBestsellers, getNewLaunches } from '../api'
 import { useCatalogueFilters, useRecommendations } from '../hooks'
@@ -35,6 +35,24 @@ export const Home = (): ReactElement => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false)
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState<boolean>(false)
+  const drawerCloseRef = useRef<HTMLButtonElement>(null)
+  const drawerOpenerRef = useRef<HTMLButtonElement>(null)
+
+  // Drawer: move focus in on open, close on Escape, give focus back on close
+  useEffect(() => {
+    if (!isDrawerOpen) return
+    const opener = drawerOpenerRef.current
+    drawerCloseRef.current?.focus()
+
+    const onKeyDown = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') setIsDrawerOpen(false)
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      opener?.focus()
+    }
+  }, [isDrawerOpen])
 
   // Load initial reference data and shelves
   useEffect(() => {
@@ -140,9 +158,12 @@ export const Home = (): ReactElement => {
 
   return (
     <div className="home-catalogue" data-testid="home-page">
+      <h1 className="visually-hidden">Book Worm catalogue</h1>
+
       {/* Mobile/Tablet Controls Bar */}
       <div className="home-catalogue__mobile-bar">
         <Button
+          ref={drawerOpenerRef}
           kind="ghost"
           size="sm"
           renderIcon={List}
@@ -165,7 +186,7 @@ export const Home = (): ReactElement => {
 
       <div className="home-catalogue__layout">
         {/* Persistent Desktop Sidebar */}
-        <aside className="home-catalogue__sidebar-desktop">
+        <div className="home-catalogue__sidebar-desktop">
           <CategorySidebar
             categories={categories}
             publishers={publishers}
@@ -175,33 +196,38 @@ export const Home = (): ReactElement => {
             onSelectPublisher={handleSelectPublisher}
             onSelectAll={handleSelectAll}
           />
-        </aside>
+        </div>
 
         {/* Mobile / Tablet Drawer */}
         {isDrawerOpen && (
-          <div
-            className="home-catalogue__drawer-backdrop"
-            onClick={() => setIsDrawerOpen(false)}
-            aria-hidden="true"
-          >
+          <div className="home-catalogue__drawer-backdrop">
+            {/* Backdrop click target; keyboard users close with Escape or the close button */}
+            <button
+              type="button"
+              className="home-catalogue__drawer-scrim"
+              aria-label="Close categories drawer"
+              tabIndex={-1}
+              onClick={() => setIsDrawerOpen(false)}
+            />
             <div
               className="home-catalogue__drawer-panel"
-              onClick={(e) => e.stopPropagation()}
               role="dialog"
               aria-modal="true"
-              aria-label="Categories drawer"
+              aria-labelledby="home-drawer-title"
             >
               <div className="home-catalogue__drawer-header">
-                <h3 className="home-catalogue__drawer-title">Categories & Publishers</h3>
+                <h2 id="home-drawer-title" className="home-catalogue__drawer-title">
+                  Categories & Publishers
+                </h2>
                 <Button
+                  ref={drawerCloseRef}
                   kind="ghost"
                   size="sm"
                   hasIconOnly
+                  renderIcon={Close}
                   iconDescription="Close categories drawer"
                   onClick={() => setIsDrawerOpen(false)}
-                >
-                  ✕
-                </Button>
+                />
               </div>
               <div className="home-catalogue__drawer-body">
                 <CategorySidebar

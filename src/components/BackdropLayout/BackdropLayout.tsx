@@ -1,6 +1,8 @@
+import { Suspense } from 'react'
 import type { ReactElement, ReactNode } from 'react'
 import { Outlet } from 'react-router-dom'
 import AppHeader from '../AppHeader/AppHeader'
+import PageLoading from '../PageLoading/PageLoading'
 import './BackdropLayout.scss'
 
 export interface BackdropLayoutProps {
@@ -19,7 +21,11 @@ export const BackdropLayout = ({
       <AppHeader />
       <main id="main-content" className="backdrop-layout__main">
         <div className={`backdrop-layout__card-container ${cardClassName ?? ''}`.trim()}>
-          {children ?? <Outlet />}
+          {children ?? (
+            <Suspense fallback={<PageLoading />}>
+              <Outlet />
+            </Suspense>
+          )}
         </div>
       </main>
     </div>

@@ -97,24 +97,26 @@ const ProductDetail = (): ReactElement => {
     })
   }
 
+  // The <main id="main-content"> landmark is provided by PageLayout; the page must not nest another one.
   if (state.loading) {
     return (
-      <main id="main-content" className="pdp pdp--loading" aria-busy="true">
-        <div className="pdp__skeleton" aria-label="Loading book details…" />
-      </main>
+      <div className="pdp pdp--loading" aria-busy="true">
+        <div className="pdp__skeleton" role="status" aria-label="Loading book details…" />
+      </div>
     )
   }
 
   if (state.notFound || !state.book) {
     return (
-      <main id="main-content" className="pdp pdp--not-found">
+      <div className="pdp pdp--not-found">
         <EmptyState
           title="Book not found"
+          titleAs="h1"
           description="We couldn't find the book you're looking for."
           action={{ label: 'Back to catalogue', to: '/' }}
           data-testid="pdp-not-found"
         />
-      </main>
+      </div>
     )
   }
 
@@ -166,7 +168,7 @@ const ProductDetail = (): ReactElement => {
   ]
 
   return (
-    <main id="main-content" className="pdp">
+    <div className="pdp">
       {/* Breadcrumb */}
       <div className="pdp__breadcrumb-wrap">
         <div className="pdp__container">
@@ -261,22 +263,19 @@ const ProductDetail = (): ReactElement => {
             </section>
 
             {/* Related reads (below reviews on narrow screens) */}
-            {relatedItems.length > 0 && (
-              <section className="pdp__related-inline" aria-label="Related Reads">
-                <RelatedReads items={relatedItems} />
-              </section>
-            )}
+            <div className="pdp__related-inline">
+              <RelatedReads items={relatedItems} />
+            </div>
           </div>
 
-          {/* Right sidebar: Related Reads (hidden on narrow, shown on wide) */}
-          {relatedItems.length > 0 && (
-            <aside className="pdp__sidebar">
-              <RelatedReads items={relatedItems} />
-            </aside>
-          )}
+          {/* Right sidebar: Related Reads (hidden on narrow, shown on wide).
+              Always rendered: with no related books it shows "No related reads yet". */}
+          <div className="pdp__sidebar">
+            <RelatedReads items={relatedItems} />
+          </div>
         </div>
       </div>
-    </main>
+    </div>
   )
 }
 

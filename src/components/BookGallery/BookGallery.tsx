@@ -24,14 +24,14 @@ export const BookGallery = ({
     : 'BW'
 
   return (
-    <div className={`book-gallery ${className}`.trim()} aria-label="Book gallery">
+    <div className={`book-gallery ${className}`.trim()} role="group" aria-label="Book gallery">
       {/* Front cover */}
       <div className="book-gallery__front">
         <CoverPlaceholder book={book} authorName={authorName} size="lg" />
       </div>
 
       {/* Back cover – shows long description */}
-      <div className="book-gallery__back" aria-label={`Back cover of ${book.title}`}>
+      <div className="book-gallery__back" role="group" aria-label={`Back cover of ${book.title}`}>
         <div className="book-gallery__back-inner">
           {book.longDescription && (
             <blockquote className="book-gallery__back-quote">

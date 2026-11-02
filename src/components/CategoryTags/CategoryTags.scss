@@ -12,6 +12,9 @@
 }
 
 .category-tags__link {
+  display: inline-block;
+  min-height: 1.5rem;
+  line-height: 1.5rem;
   color: var(--cds-link-primary, #78a9ff);
   text-decoration: none;
 

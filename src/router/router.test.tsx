@@ -31,8 +31,8 @@ describe('App Router with Shell Layouts', () => {
     expect(screen.getByText('Book Worm')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /shopping cart/i })).toBeInTheDocument()
 
-    // Page content is rendered inside the layout with real data
-    expect(screen.getByTestId('home-page')).toBeInTheDocument()
+    // Page content is lazy-loaded, then rendered inside the layout with real data
+    expect(await screen.findByTestId('home-page')).toBeInTheDocument()
     await waitFor(() => {
       expect(screen.getByText('Bestsellers this Month')).toBeInTheDocument()
       expect(screen.getAllByTestId('book-card-book-lost-kitten').length).toBeGreaterThan(0)

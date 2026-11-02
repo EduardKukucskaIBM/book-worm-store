@@ -40,7 +40,6 @@ const Writers = (): ReactElement => {
               to={`/?author=${encodeURIComponent(author.id)}`}
               className="writer-card"
               data-testid={`writer-card-${author.id}`}
-              aria-label={`${author.name}, ${author.bookIds.length} book${author.bookIds.length !== 1 ? 's' : ''}`}
             >
               <div className="writer-card__avatar" aria-hidden="true">
                 {getInitials(author.name)}

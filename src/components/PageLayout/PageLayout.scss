@@ -31,3 +31,16 @@
   max-width: 90rem; // 1440px
   margin: 0 auto;
 }
+
+// Home: the page owns its own spacing so the sidebar can sit flush against the viewport edge
+.page-layout--full-bleed {
+  .page-layout__main {
+    padding: 0;
+  }
+
+  .page-layout__content {
+    max-width: none;
+    margin: 0;
+  }
+}
+

@@ -20,7 +20,7 @@ export const RelatedReads = ({ items, className = '' }: RelatedReadsProps): Reac
       <h2 className="related-reads__heading">Related Reads</h2>
       <div className="related-reads__divider" aria-hidden="true" />
       {items.length === 0 ? (
-        <p className="related-reads__empty">No related books found.</p>
+        <p className="related-reads__empty">No related reads yet</p>
       ) : (
         <ul className="related-reads__list" aria-label="Related books">
           {items.map(({ book, authorName, categories }) => (

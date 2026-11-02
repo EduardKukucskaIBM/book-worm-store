@@ -1,10 +1,22 @@
 @use '@carbon/react/scss/spacing' as *;
 @use '@carbon/react/scss/breakpoint' as bp;
 
+// The Home route uses <PageLayout fullBleed>, so this page owns its spacing:
+// below lg everything is padded; from lg the sidebar sits flush against the left
+// viewport edge (design 01) and only the content column is padded.
 .home-catalogue {
   width: 100%;
   display: flex;
   flex-direction: column;
+  padding: $spacing-05;
+
+  @include bp.breakpoint(md) {
+    padding: $spacing-06 $spacing-07;
+  }
+
+  @include bp.breakpoint(lg) {
+    padding: 0;
+  }
 }
 
 .home-catalogue__mobile-bar {
@@ -35,7 +47,7 @@
   @include bp.breakpoint(lg) {
     flex-direction: row;
     align-items: flex-start;
-    gap: $spacing-07;
+    gap: 0;
   }
 }
 
@@ -44,10 +56,13 @@
 
   @include bp.breakpoint(lg) {
     display: block;
-    width: 220px;
+    width: 16rem; // 256px, as in design 01
     flex-shrink: 0;
     position: sticky;
-    top: calc(3rem + #{$spacing-05});
+    top: $spacing-09; // below the fixed 3rem header
+    max-height: calc(100dvh - #{$spacing-09});
+    overflow-y: auto;
+    padding: $spacing-05 0;
   }
 }
 
@@ -56,6 +71,11 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
+
+  @include bp.breakpoint(lg) {
+    max-width: 90rem;
+    padding: $spacing-05 $spacing-05 $spacing-07;
+  }
 }
 
 .home-catalogue__filter-bar-container {
@@ -91,6 +111,18 @@
   z-index: 9000;
   display: flex;
   animation: fadeIn 0.15s ease-out;
+}
+
+// Full-size invisible button behind the panel: clicking outside the panel closes it
+.home-catalogue__drawer-scrim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: default;
 }
 
 .home-catalogue__drawer-panel {

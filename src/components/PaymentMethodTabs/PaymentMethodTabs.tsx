@@ -15,21 +15,26 @@ export const PaymentMethodTabs = ({
   const tabIds = PAYMENT_TABS.map((t) => t.id)
   const activeIndex = tabIds.indexOf(activeTab)
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>): void => {
+  // Select the tab and move keyboard focus with it (WAI-ARIA tabs pattern)
+  const selectTab = (index: number): void => {
+    const tab = PAYMENT_TABS[index]
+    onTabChange(tab.id)
+    document.getElementById(`payment-tab-${tab.id}`)?.focus()
+  }
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>): void => {
     if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
       e.preventDefault()
-      const next = (activeIndex + 1) % PAYMENT_TABS.length
-      onTabChange(PAYMENT_TABS[next].id)
+      selectTab((activeIndex + 1) % PAYMENT_TABS.length)
     } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
       e.preventDefault()
-      const prev = (activeIndex - 1 + PAYMENT_TABS.length) % PAYMENT_TABS.length
-      onTabChange(PAYMENT_TABS[prev].id)
+      selectTab((activeIndex - 1 + PAYMENT_TABS.length) % PAYMENT_TABS.length)
     } else if (e.key === 'Home') {
       e.preventDefault()
-      onTabChange(PAYMENT_TABS[0].id)
+      selectTab(0)
     } else if (e.key === 'End') {
       e.preventDefault()
-      onTabChange(PAYMENT_TABS[PAYMENT_TABS.length - 1].id)
+      selectTab(PAYMENT_TABS.length - 1)
     }
   }
 
@@ -39,7 +44,6 @@ export const PaymentMethodTabs = ({
       aria-label="Payment method"
       aria-orientation="vertical"
       className="payment-method-tabs"
-      onKeyDown={handleKeyDown}
     >
       {PAYMENT_TABS.map((tab) => {
         const isActive = tab.id === activeTab
@@ -53,6 +57,7 @@ export const PaymentMethodTabs = ({
             tabIndex={isActive ? 0 : -1}
             className={`payment-method-tabs__tab${isActive ? ' payment-method-tabs__tab--active' : ''}`}
             onClick={() => onTabChange(tab.id)}
+            onKeyDown={handleKeyDown}
           >
             {tab.label}
           </button>

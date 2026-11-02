@@ -1,8 +1,54 @@
 // Carbon g100 theme entry
 // The g100 dark theme is applied via the React <Theme theme="g100"> wrapper
-// in App.tsx (CSS custom properties). This Sass file only imports the Carbon
-// style foundation — no configuration-with needed here.
-@use '@carbon/react';
+// in App.tsx (CSS custom properties).
+//
+// ST11: instead of `@use '@carbon/react'` (every Carbon component, ~1.27 MB of CSS),
+// only the foundation and the component styles the app actually renders are loaded.
+// When a new Carbon component is introduced, add its partial to the list below.
+
+// Foundation: reset, type, theme tokens, layers, layout tokens and the g100 zone
+@use '@carbon/react/scss/reset';
+@use '@carbon/react/scss/type';
+@use '@carbon/react/scss/fonts';
+@use '@carbon/react/scss/layer';
+@use '@carbon/react/scss/layout';
+@use '@carbon/react/scss/zone';
+
+// Components used by the app
+@use '@carbon/react/scss/components/breadcrumb';
+@use '@carbon/react/scss/components/button';
+@use '@carbon/react/scss/components/checkbox';
+@use '@carbon/react/scss/components/form';
+@use '@carbon/react/scss/components/inline-loading';
+@use '@carbon/react/scss/components/link';
+@use '@carbon/react/scss/components/loading';
+@use '@carbon/react/scss/components/modal';
+@use '@carbon/react/scss/components/notification';
+@use '@carbon/react/scss/components/number-input';
+@use '@carbon/react/scss/components/popover';
+@use '@carbon/react/scss/components/radio-button';
+@use '@carbon/react/scss/components/search';
+@use '@carbon/react/scss/components/select';
+@use '@carbon/react/scss/components/skeleton-styles';
+@use '@carbon/react/scss/components/stack';
+@use '@carbon/react/scss/components/tag';
+@use '@carbon/react/scss/components/text-input';
+@use '@carbon/react/scss/components/tile';
+@use '@carbon/react/scss/components/tooltip';
+@use '@carbon/react/scss/components/ui-shell';
+
+// Text for assistive technology only (e.g. the Home page h1)
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 // Ensure the app fills the viewport with the correct background
 #root {
