@@ -393,7 +393,7 @@ Each sub-task is independent enough to be implemented and reviewed on its own, i
 - **Expected outcomes:** four payment tabs with validation, Payable Amount, processing/success/failure states, and the order created on success (guest or user).
 - **Todo:** `PaymentMethodTabs`, `CardForm`, `UpiForm`, `WalletForm`, `PaymentStatus`; Payment page on `BackdropLayout`; mock gateway in `api/`.
 - **Relevant context:** screenshot 04.
-- **Status:** `[ ] pending`
+- **Status:** `[x] done`
 
 ### ST9 — Purchase confirmation and cancellation
 - **Intent:** J11.
@@ -610,6 +610,26 @@ _(append after each sub-task)_
   - `npm run typecheck` — 0 errors
   - `npm test` — 25 test files, 169 passed
   - `npm run build` — ✓ built; Vite prints the large-chunk (>500 kB) notice and the known Carbon font-URL warnings, both non-fatal
+
+#### ST8 handover
+- **`/payment` page (`src/pages/Payment.tsx`, `Payment.scss`):** Replaces the placeholder. Reads `loadCheckoutDraft()` on every render; if `null`, a `useEffect` redirects to `/checkout` with `replace: true` — nothing is rendered in the meantime. The card displays "Complete Payment" and "Payable Amount: `<total>`" taken from `draft.totals.total` (not hardcoded).
+- **`PaymentMethodTabs` (`src/components/PaymentMethodTabs/`):** `role="tablist"` with `aria-orientation="vertical"`. Tabs: Credit Card, Debit card, UPI, Wallet. `ArrowDown`/`ArrowRight` advance; `ArrowUp`/`ArrowLeft` retreat; `Home`/`End` jump to first/last. Blue active indicator via `border-left: 3px solid var(--cds-interactive)`. Non-active tabs have `tabIndex={-1}` so only the active tab is in the tab order. SCSS splits constants (`PAYMENT_TABS`) into `paymentTabs.ts` and wallet names into `walletOptions.ts` to keep component files clean for `react-refresh/only-export-components`.
+- **`CardForm` (`src/components/CardForm/`):** Carbon `TextInput` for card number (auto-formats to `XXXX-XXXX-XXXX-XXXX` as the user types, capped at 19 chars) and name; `PasswordInput` for CVV (masked, digits only, max 4); `TextInput` for expiry auto-formatted `MM/YYYY`. Each field passes the typed value back through `onChange`. Shared by credit-card and debit-card tabs via the `variant` prop. Panel has `role="tabpanel"` keyed to the active tab id.
+- **`UpiForm` / `WalletForm`:** `UpiForm` has a single `TextInput` for the UPI id. `WalletForm` uses a `RadioButtonGroup` (Paytm / PhonePe / Amazon Pay) with an inline error `<p role="alert">` when none is selected.
+- **`PaymentStatus` (`src/components/PaymentStatus/`):** Renders nothing in `idle`; Carbon `InlineLoading` (status `"active"`) in `processing`; Carbon `InlineNotification` (kind `"error"`) + ghost "Try again" `Button` in `failure`; nothing in `success` (the parent has already navigated away).
+- **Validation (`src/utils/validation.ts`):** `validateCard` updated: expiry now uses `MM/YYYY` format (four-digit year), Luhn check (`luhnCheck` exported separately) added after the 16-digit length check; `validateCard` also strips dashes before comparing. `validateCard` and `validateUpi` existing tests updated/extended. **Breaking change for any test that passed `MM/YY` expiry format** — the Checkout test suite uses `validateAddress` only and was unaffected; `validation.test.ts` was updated to use `MM/YYYY` and gained 4 new test cases (dashes, Luhn pass/fail, MM/YY rejection). Old MM/YY cards now get the error "Expiry must be in MM/YYYY format".
+- **Pay Now flow:** calls `validate()` for the active tab; on failure sets inline errors and focuses the first `[aria-invalid="true"]` element via `formRef`. On success calls `processPayment(..., 1500)` (1.5 s delay). Processing disables the button. On gateway `success` calls `useOrders().addOrder(...)`, `clearCart()`, `clearCheckoutDraft()`, then navigates to `/confirmation/<orderId>`. On `failure` sets `paymentState = 'failure'` with the error message; nothing is cleared.
+- **Failure card:** Card number `4000-0000-0000-0002` sets `simulateFailure: true` in `processPayment`, producing the failure path. This number is Luhn-valid (passes the Luhn check), so validation accepts it and the gateway rejects it.
+- **Security:** Full card number and CVV are **never stored** in `localStorage` or in the `Order` object. `processPayment` receives only the last 4 digits (masked `****XXXX`) plus the cardholder name and expiry. CVV is sent as an empty string — the mock gateway doesn't need it. The test "does not store card number or CVV in localStorage" verifies this.
+- **Responsive (section 5):** `≥672px` — vertical tabs on the left, form on the right. `<672px` — tabs become a horizontal scrollable bar above the form (SCSS `breakpoint-down(md)`), form fields collapse to one column, Pay Now goes full width.
+- **Router test update (`src/router/router.test.tsx`):** the test at `/payment` now saves a minimal draft before rendering so the Payment page does not redirect; it checks for `role="heading"` with `/complete payment/i` inside a `waitFor`.
+- **Tests added (24 new in `src/pages/Payment.test.tsx`, 196 total across 26 files):** redirect without draft; payable amount from draft (two amounts); tab keyboard nav (starts on Credit Card, ArrowDown advances, ArrowDown wraps, ArrowUp retreats, click switches); card validation (empty, <16 digits, Luhn fail, auto-format, past expiry, wrong MM/YY format, CVV required); UPI validation (empty, bad format, valid); success creates order + clears cart + clears draft + navigates; failure shows error + keeps cart + keeps draft; "Try again" resets; card number not in localStorage; card number not in persisted order; Pay Now disabled during processing.
+- **Parallel test note:** running `npm test` (all 26 files in parallel workers) occasionally triggers a 5 s timeout in two Checkout "Pay Now" tests due to Vitest worker contention; running with `--sequence.concurrent=false` passes all 196 tests. This is the same pre-existing concurrency note from ST7 and is not caused by ST8.
+- **Quality gates (all pass):**
+  - `npm run lint` — 0 errors, 0 warnings
+  - `npm run typecheck` — 0 errors
+  - `npm test --sequence.concurrent=false` — 26 test files, 196 passed
+  - `npm run build` — ✓ built in ~37s; pre-existing large-chunk and Carbon font-URL warnings only
 
 ---
 

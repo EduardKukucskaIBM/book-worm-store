@@ -46,22 +46,45 @@ describe('validation utilities', () => {
   describe('validateCard', () => {
     const fixedNow = new Date('2024-06-01')
 
-    it('passes for valid 16-digit card and future expiry', () => {
+    it('passes for valid 16-digit card and future expiry in MM/YYYY format', () => {
+      // 4532015112830366 is a known Luhn-valid Visa test card
       const card = {
-        cardNumber: '4532 1111 2222 3333',
+        cardNumber: '4532015112830366',
         cardHolder: 'John Doe',
-        expiry: '12/26',
+        expiry: '12/2026',
         cvv: '123',
       }
       const errors = validateCard(card, fixedNow)
       expect(Object.keys(errors).length).toBe(0)
     })
 
-    it('detects expired cards and invalid CVVs', () => {
+    it('accepts card number with dashes (XXXX-XXXX-XXXX-XXXX)', () => {
+      const card = {
+        cardNumber: '4532-0151-1283-0366',
+        cardHolder: 'John Doe',
+        expiry: '12/2026',
+        cvv: '123',
+      }
+      const errors = validateCard(card, fixedNow)
+      expect(errors.cardNumber).toBeUndefined()
+    })
+
+    it('rejects cards that fail the Luhn check', () => {
+      const card = {
+        cardNumber: '4532015112830367', // last digit changed
+        cardHolder: 'John Doe',
+        expiry: '12/2026',
+        cvv: '123',
+      }
+      const errors = validateCard(card, fixedNow)
+      expect(errors.cardNumber).toBe('Card number is invalid')
+    })
+
+    it('detects expired cards (MM/YYYY) and invalid CVVs', () => {
       const card = {
         cardNumber: '123',
         cardHolder: '',
-        expiry: '05/24', // Expired relative to 2024-06
+        expiry: '05/2024', // Expired relative to 2024-06
         cvv: '1',
       }
       const errors = validateCard(card, fixedNow)
@@ -69,6 +92,17 @@ describe('validation utilities', () => {
       expect(errors.cardHolder).toBeDefined()
       expect(errors.expiry).toBeDefined()
       expect(errors.cvv).toBeDefined()
+    })
+
+    it('rejects old MM/YY format', () => {
+      const card = {
+        cardNumber: '4532015112830366',
+        cardHolder: 'John Doe',
+        expiry: '12/26',
+        cvv: '123',
+      }
+      const errors = validateCard(card, fixedNow)
+      expect(errors.expiry).toBe('Expiry must be in MM/YYYY format')
     })
   })
 

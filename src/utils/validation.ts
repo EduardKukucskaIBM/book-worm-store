@@ -19,7 +19,7 @@ const PIN_REGEX = /^\d{6}$/
 const PHONE_DIGITS_REGEX = /^\d{10}$/
 const CARD_NUMBER_REGEX = /^\d{16}$/
 const CVV_REGEX = /^\d{3,4}$/
-const CARD_EXPIRY_REGEX = /^(0[1-9]|1[0-2])\/([0-9]{2})$/
+const CARD_EXPIRY_REGEX = /^(0[1-9]|1[0-2])\/(\d{4})$/
 const UPI_REGEX = /^[\w.-]+@[\w.-]+$/
 
 /**
@@ -101,14 +101,34 @@ export interface CardValidationErrors {
 /**
  * Validate credit/debit card form.
  */
+/** Luhn algorithm check for credit/debit card numbers. */
+export function luhnCheck(cardNumber: string): boolean {
+  const digits = cardNumber.replace(/\D/g, '')
+  if (digits.length < 13) return false
+  let sum = 0
+  let isOdd = false
+  for (let i = digits.length - 1; i >= 0; i--) {
+    let digit = parseInt(digits[i], 10)
+    if (isOdd) {
+      digit *= 2
+      if (digit > 9) digit -= 9
+    }
+    sum += digit
+    isOdd = !isOdd
+  }
+  return sum % 10 === 0
+}
+
 export function validateCard(card: Partial<CardValidationInput>, now: Date = new Date()): CardValidationErrors {
   const errors: CardValidationErrors = {}
-  const cleanNumber = (card.cardNumber ?? '').replace(/\s+/g, '')
+  const cleanNumber = (card.cardNumber ?? '').replace(/[-\s]/g, '')
 
   if (!cleanNumber) {
     errors.cardNumber = 'Card number is required'
   } else if (!CARD_NUMBER_REGEX.test(cleanNumber)) {
     errors.cardNumber = 'Card number must be 16 digits'
+  } else if (!luhnCheck(cleanNumber)) {
+    errors.cardNumber = 'Card number is invalid'
   }
 
   if (!card.cardHolder?.trim()) {
@@ -121,10 +141,10 @@ export function validateCard(card: Partial<CardValidationInput>, now: Date = new
   } else {
     const match = expiry.match(CARD_EXPIRY_REGEX)
     if (!match) {
-      errors.expiry = 'Expiry must be in MM/YY format'
+      errors.expiry = 'Expiry must be in MM/YYYY format'
     } else {
       const month = parseInt(match[1], 10)
-      const year = 2000 + parseInt(match[2], 10)
+      const year = parseInt(match[2], 10)
       const currentYear = now.getFullYear()
       const currentMonth = now.getMonth() + 1
       if (year < currentYear || (year === currentYear && month < currentMonth)) {

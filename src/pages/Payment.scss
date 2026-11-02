@@ -1,0 +1,70 @@
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/type' as *;
+@use '@carbon/react/scss/breakpoint' as bp;
+
+// The payment card sits inside BackdropLayout's card-container
+.payment-card {
+  width: 100%;
+  max-width: 44rem;
+  background-color: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-01);
+  border-radius: 0.25rem;
+  overflow: hidden;
+}
+
+// Header bar
+.payment-card__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: $spacing-06 $spacing-06 $spacing-05;
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+  gap: $spacing-05;
+  flex-wrap: wrap;
+}
+
+.payment-card__title {
+  @include type-style('heading-03');
+  color: var(--cds-text-primary);
+  margin: 0;
+}
+
+.payment-card__amount {
+  @include type-style('heading-03');
+  color: var(--cds-text-primary);
+  white-space: nowrap;
+}
+
+// Body: tabs + form side by side
+.payment-card__body {
+  display: flex;
+
+  @include bp.breakpoint-down(md) {
+    flex-direction: column;
+  }
+}
+
+// Form panel container
+.payment-card__form-panel {
+  flex: 1;
+  padding: $spacing-06;
+  display: flex;
+  flex-direction: column;
+
+  @include bp.breakpoint-down(md) {
+    padding: $spacing-05;
+  }
+}
+
+// Pay Now footer
+.payment-card__footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: $spacing-05;
+
+  @include bp.breakpoint-down(md) {
+    .cds--btn {
+      width: 100%;
+    }
+  }
+}
