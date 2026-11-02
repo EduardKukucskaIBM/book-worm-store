@@ -116,3 +116,6 @@ export type { CancelOrderControlProps } from './CancelOrderControl/CancelOrderCo
 
 export { PurchaseSuccess } from './PurchaseSuccess/PurchaseSuccess'
 export type { PurchaseSuccessProps } from './PurchaseSuccess/PurchaseSuccess'
+
+export { OrderCard } from './OrderCard/OrderCard'
+export type { OrderCardProps } from './OrderCard/OrderCard'

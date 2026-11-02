@@ -406,7 +406,7 @@ Each sub-task is independent enough to be implemented and reviewed on its own, i
 - **Intent:** J12 (feeds J6), plus the two minimal pages linked from the header.
 - **Expected outcomes:** `/orders` with cards, statuses, cancel while eligible, Buy it again; `/wishlist` listing wishlisted books with remove / add to cart; `/writers` listing authors that link to `/?author=`.
 - **Todo:** `OrderCard`, `BuyAgainButton`, reuse `CancelOrderControl`; `AuthorList`; `BookCard` (wishlist variant); Orders, Wishlist and Writers pages.
-- **Status:** `[ ] pending`
+- **Status:** `[x] done`
 
 ### ST11 — Responsive, accessibility and final validation
 - **Intent:** verify section 5 and polish.
@@ -648,6 +648,29 @@ _(append after each sub-task)_
   - `npm run typecheck` — 0 errors
   - `npm test -- --run --sequence.concurrent=false` — 30 test files, 218 passed
   - `npm run build` — ✓ built in ~17s; pre-existing large-chunk and Carbon font-URL warnings only
+
+#### ST10 handover
+- **New pages:**
+  - `/orders` (`src/pages/Orders.tsx`, `Orders.scss`): Requires auth via `RequireAuth`. Loads orders for the logged-in user via `useOrders().getOrdersForUser(user.id)` and sorts newest-first. Empty state with "Browse catalogue" link when no orders. Renders one `OrderCard` per order inside a `<ul>`.
+  - `/wishlist` (`src/pages/Wishlist.tsx`, `Wishlist.scss`): Guest-accessible. Loads all books and authors asynchronously; filters the catalogue by `useWishlist().bookIds`. Empty state with "Browse catalogue" link. 1/2/3-column responsive grid (`<672px` → 1, `672–1055px` → 2, `≥1056px` → 3).
+  - `/writers` (`src/pages/Writers.tsx`, `Writers.scss`): Guest-accessible. Loads authors via `getAuthors()` sorted alphabetically by name. Renders `writer-card` links with an initials avatar (deterministic `getInitials`), name, book count, and `href=/?author=<id>`. Same 1/2/3-column grid as Wishlist.
+- **New component `OrderCard` (`src/components/OrderCard/`):** Shows order metadata (ID linked to `/confirmation/:orderId`, date, item count, total, payment method), a Carbon `Tag` for status (Confirmed/blue, Delivered/green, Cancelled/red), `BookCard variant="order"` per line item with a "Buy it again" ghost button, `CancelOrderControl` (reused), and a "Buy all again" secondary button. "Buy it again" / "Buy all again" both add to cart, show a 1.5s success `ToastNotification`, then navigate to `/checkout`.
+- **BookCard new variants (`src/components/BookCard/BookCard.scss`):**
+  - `order`: compact horizontal layout (100×140px cover), no hover tint, 80×112 at `<672px`.
+  - `wishlist`: vertical card layout with centred 120×168px cover, `layer-01` background, "Add to cart" primary + "Remove" ghost button stacked in `.book-card__actions`.
+- **Toast/navigate pattern:** `OrderCard` uses a single `toastVisible` state shared by both per-item and bulk buttons. Both paths: add items → show toast → 1500ms → hide toast → `navigate('/checkout')`. The `setTimeout` is plain (no cleanup) — acceptable because navigation unmounts the component.
+- **Seed-order isolation in tests:** Orders tests use `userId: 'user-test-orders'` (not `user-demo`) so the `orders.json` seed orders (which belong to `user-demo`) do not appear and contaminate assertions.
+- **Cancel-window timing in tests:** Order fixture dates are relative to `new Date()` so the 48h window is always valid at run-time.
+- **Tests added (32 new in 3 files, 250 total across 36 files):**
+  - `src/pages/Orders.test.tsx` (15 tests): guest redirect, page heading, empty state, card per order, newest-first ordering, Confirmed/Delivered/Cancelled status tags, order ID link, total, "Buy it again" → cart + navigate, "Buy all again" → cart + navigate, cancel button enabled within window, no control for cancelled order, disabled button for delivered order.
+  - `src/pages/Wishlist.test.tsx` (8 tests): heading, empty state + catalogue link, renders books, add-to-cart button present, add-to-cart adds to cart, remove removes from wishlist + shows empty state, multiple books in grid, guest access.
+  - `src/pages/Writers.test.tsx` (9 tests): heading, grid, author names, book counts (plural/singular), initials avatar, links to `/?author=<id>`, alphabetical order, accessible `aria-label="Authors"`.
+- **Pre-existing flaky tests:** `Payment.test.tsx` "failure path" tests still timeout occasionally under full-suite parallel concurrency (documented since ST7). Run with `--sequence.concurrent=false` for a clean result. Not caused by ST10.
+- **Quality gates (all pass):**
+  - `npm run lint` — 0 errors, 0 warnings
+  - `npm run typecheck` — 0 errors
+  - `npm test -- --run --sequence.concurrent=false` — 33 test files, 250 passed (new tests only: 32 passed in 3 new files)
+  - `npm run build` — ✓ built in ~37s; pre-existing large-chunk and Carbon font-URL warnings only
 
 ---
 
