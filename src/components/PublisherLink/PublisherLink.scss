@@ -1,0 +1,11 @@
+.publisher-link {
+  &__name {
+    color: var(--cds-link-primary, #78a9ff);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--cds-link-primary-hover, #a6c8ff);
+      text-decoration: underline;
+    }
+  }
+}

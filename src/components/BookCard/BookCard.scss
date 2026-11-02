@@ -117,3 +117,32 @@
   font-size: 0.75rem;
   color: var(--cds-text-secondary, #c6c6c6);
 }
+
+// Related variant – compact horizontal layout matching the right-column design
+.book-card--related {
+  padding: $spacing-03 0;
+  gap: $spacing-04;
+
+  .book-card__cover-wrapper .cover-placeholder {
+    width: 80px;
+    min-height: 110px;
+  }
+
+  .book-card__title {
+    font-size: 0.9375rem;
+  }
+
+  .book-card__blurb {
+    font-size: 0.75rem;
+    -webkit-line-clamp: 2;
+  }
+
+  .book-card__price {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .book-card__delivery {
+    font-size: 0.6875rem;
+  }
+}

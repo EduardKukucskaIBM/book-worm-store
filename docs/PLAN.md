@@ -379,7 +379,7 @@ Each sub-task is independent enough to be implemented and reviewed on its own, i
 - **Expected outcomes:** full PDP including related reads, reviews (added locally, 100-char limit), Add to Cart (updates badge), Add to Wishlist (toggles local state), responsive.
 - **Todo:** `BookGallery`, `PublisherLink`, `ProductActions`, `BookMeta`, `RatingStars`, `AuthorBio`, `ReviewForm`, `ReviewList`, `RelatedReads`; the PDP page.
 - **Relevant context:** screenshot 02.
-- **Status:** `[ ] pending`
+- **Status:** `[x] complete`
 
 ### ST7 — Cart and checkout (guest or logged in)
 - **Intent:** J5, J7, J9.
@@ -547,6 +547,38 @@ _(append after each sub-task)_
   - `npm run typecheck` — 0 errors
   - `npm test` — 23 test files, 123 passed (0 failed)
   - `npm run build` — ✓ built successfully for production
+
+#### ST6 handover
+- **New components (`src/components/`):**
+  - `BookGallery/` — front cover (`CoverPlaceholder --lg`) + back cover panel showing the book's `longDescription` in a blockquote, an initials disc, and a simple SVG barcode. No images; all art from `CoverPlaceholder`.
+  - `PublisherLink/` — `<Link to="/?publisher=id">Name</Link>` Carbon token colours.
+  - `RatingStars/` — dual-mode component: **display** (`role="img"`, filled/empty `StarFilled`/`Star` icons from `@carbon/icons-react`) and **input** (`role="group"` of `<button>` elements with `aria-pressed` and `aria-label`).
+  - `AuthorBio/` — initials avatar (deterministic `getInitials`, no photos — D6 clarified in prompt), author name `<h3>`, bio paragraph.
+  - `BookMeta/` — horizontal row: Language / Rating (`RatingStars` display) / Copies Sold; separated by 1px dividers.
+  - `ReviewForm/` — controlled `<textarea>` capped at `MAX_CHARS=100`, live `charCount/100` counter goes red over limit; `RatingStars` input; Submit `disabled` until both text (1–100 chars) and rating (1–5) are valid. The `bookId` prop is optional (kept for API binding context, not needed inside the form itself).
+  - `ReviewList/` — `<ul>` of review items showing reviewer name, formatted date, text, and `RatingStars` display; "No reviews yet" empty message.
+  - `RelatedReads/` — `<aside>` with heading + divider + `BookCard variant="related"` list. The `related` BookCard variant was added to `BookCard.scss`.
+  - `ProductActions/` — "Add to Cart" (primary, `ShoppingCart` icon) calls `useCart().addItem`; "Add to Wishlist" (secondary, `Bookmark`/`BookmarkFilled`) toggles `useWishlist().toggle`, label changes to "In Wishlist". Carbon `ToastNotification` (kind `success`, timeout 4000 ms) appears below the buttons on add-to-cart; a "View cart" link sits beneath it.
+- **ProductDetail page (`src/pages/ProductDetail.tsx`, `ProductDetail.scss`):**
+  - Breadcrumb: Home / Non-Fiction (parent) / Self Help (leaf). Both categories are linked; the leaf is `isCurrent`. Falls back to title-only breadcrumb for books without a parent category.
+  - Top section: 2-column grid — `BookGallery` left, details right. Details: `<h1>` title, `AuthorLink` (reused from ST5), short description, "Published by:" `PublisherLink`, format, `CategoryTags`, large `PriceTag --lg`, delivery line ("Delivery by <date>" or "Instant download" for eBooks), `ProductActions`, `BookMeta`.
+  - About the writer: `AuthorBio`.
+  - Reviews: 2-column grid — `ReviewForm` left / `ReviewList` right. Reviews persist to `localStorage` keyed `bookworm.reviews.<bookId>` using `saveJSON`/`loadJSON`. Newly submitted reviews are deduped with API reviews by `id` before rendering.
+  - Related Reads: right sidebar at ≥1056px (sticky); moves below the reviews section at <1056px via `pdp__related-inline` / `pdp__sidebar` responsive split.
+  - Unknown book id: `EmptyState` "Book not found" with "Back to catalogue" link, `data-testid="pdp-not-found"`.
+  - State initialised from `useState` lazy-initialiser (not `useEffect`) to avoid the `react-hooks/set-state-in-effect` ESLint rule.
+- **Responsive layout (section 5 compliance):**
+  - `≥1056px`: 2-column `pdp__layout` (main + 300px sticky sidebar); top section 2-column gallery + details; reviews 2-column.
+  - `672–1055px`: sidebar hidden, `pdp__related-inline` shown below reviews; top section still 2-column.
+  - `<672px`: all sections single-column; buttons full-width via CSS `flex-direction: column` in `.pdp__actions`.
+- **Toast "View cart" link:** Carbon's `ToastNotification.subtitle` only accepts `string` (TS type); the "View cart" link is placed in a sibling `<div>` beneath the toast (styled via `.product-actions__toast-links`).
+- **Router test update (`src/router/router.test.tsx`):** the test at `/books/1` (non-existent ID) was replaced with `/books/book-art-of-focus` and wrapped in `waitFor` to accommodate the async data load.
+- **Tests added (17 new, 140 total across 24 files):** `ProductDetail.test.tsx` — renders title/author/description/publisher/format/price, delivery by / instant download, breadcrumb Home + category, About the writer + initials avatar, Add to Cart toast, wishlist toggle, review submit disabled/enabled, counter 0/100, review submit + localStorage persistence, related reads links, unknown id "not found" empty state, and router integration at `/books/book-art-of-learning`.
+- **Quality gates (all pass):**
+  - `npm run lint` — 0 errors, 0 warnings
+  - `npm run typecheck` — 0 errors
+  - `npm test` — 24 test files, 140 passed
+  - `npm run build` — ✓ production build succeeded; only pre-existing Carbon font-URL warnings
 
 ---
 

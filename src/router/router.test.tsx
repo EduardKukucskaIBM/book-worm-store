@@ -37,8 +37,8 @@ describe('App Router with Shell Layouts', () => {
     })
   })
 
-  it('renders the header ("Book Worm" and cart button) on "/books/1"', () => {
-    renderRoute('/books/1')
+  it('renders the header ("Book Worm" and cart button) on "/books/book-art-of-focus"', async () => {
+    renderRoute('/books/book-art-of-focus')
 
     // Header elements are present
     expect(screen.getByRole('banner')).toBeInTheDocument()
@@ -46,7 +46,11 @@ describe('App Router with Shell Layouts', () => {
     expect(screen.getByRole('link', { name: /shopping cart/i })).toBeInTheDocument()
 
     // Product detail page content is rendered inside the layout
-    expect(screen.getByRole('heading', { name: /product detail/i })).toBeInTheDocument()
+    await waitFor(() => {
+      expect(
+        screen.getByRole('heading', { name: 'The Art of Focus' })
+      ).toBeInTheDocument()
+    })
   })
 
   it('renders the header on BackdropLayout routes like "/payment"', () => {

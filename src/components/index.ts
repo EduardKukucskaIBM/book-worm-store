@@ -44,3 +44,30 @@ export type { ActiveFilterTagsProps } from './ActiveFilterTags/ActiveFilterTags'
 
 export { BookShelf } from './BookShelf/BookShelf'
 export type { BookShelfProps } from './BookShelf/BookShelf'
+
+export { BookGallery } from './BookGallery/BookGallery'
+export type { BookGalleryProps } from './BookGallery/BookGallery'
+
+export { PublisherLink } from './PublisherLink/PublisherLink'
+export type { PublisherLinkProps } from './PublisherLink/PublisherLink'
+
+export { RatingStars } from './RatingStars/RatingStars'
+export type { RatingStarsProps } from './RatingStars/RatingStars'
+
+export { AuthorBio } from './AuthorBio/AuthorBio'
+export type { AuthorBioProps } from './AuthorBio/AuthorBio'
+
+export { BookMeta } from './BookMeta/BookMeta'
+export type { BookMetaProps } from './BookMeta/BookMeta'
+
+export { ReviewForm } from './ReviewForm/ReviewForm'
+export type { ReviewFormProps } from './ReviewForm/ReviewForm'
+
+export { ReviewList } from './ReviewList/ReviewList'
+export type { ReviewListProps } from './ReviewList/ReviewList'
+
+export { RelatedReads } from './RelatedReads/RelatedReads'
+export type { RelatedReadsProps, RelatedReadItem } from './RelatedReads/RelatedReads'
+
+export { ProductActions } from './ProductActions/ProductActions'
+export type { ProductActionsProps } from './ProductActions/ProductActions'
