@@ -400,7 +400,7 @@ Each sub-task is independent enough to be implemented and reviewed on its own, i
 - **Expected outcomes:** confirmation card, 48h cancel window with modal, cancel updates the order and refunds points, cart cleared; works for guest orders.
 - **Todo:** `PurchaseSuccess`, `CancelOrderControl`; Confirmation page.
 - **Relevant context:** screenshot 05.
-- **Status:** `[ ] pending`
+- **Status:** `[x] done`
 
 ### ST10 — Order history, Buy it again, wishlist and writers
 - **Intent:** J12 (feeds J6), plus the two minimal pages linked from the header.
@@ -630,6 +630,24 @@ _(append after each sub-task)_
   - `npm run typecheck` — 0 errors
   - `npm test --sequence.concurrent=false` — 26 test files, 196 passed
   - `npm run build` — ✓ built in ~37s; pre-existing large-chunk and Carbon font-URL warnings only
+
+#### ST9 handover
+- **Confirmation page (`src/pages/Confirmation.tsx`, `Confirmation.scss`):** Mounted on `/confirmation/:orderId` under `BackdropLayout`. Loads order via `useOrders().getOrder(orderId)`. If unknown or belonging to another user (`order.userId !== null && (!user || user.id !== order.userId)`), displays `EmptyState` ("Order not found") with action linking back to catalogue (`/`). Guest orders (`order.userId === null`) are viewable by guests and logged-in users.
+- **`PurchaseSuccess` component (`src/components/PurchaseSuccess/`):** Reusable confirmation card matching `05-confirmation.jpg`. Features green check icon (`CheckmarkFilled`), heading "Your purchase of the following reads is successful", order meta bar (Order ID, Placed date, Payment method, Total paid, Cancelled tag), InlineNotification on cancellation, 2-column grid of purchased books via `BookCard` (`summary` variant) with delivery info ("Delivery by `<date>`" or "Instant download"), `CancelOrderControl`, and primary "Continue your Shopping" button (`/`).
+- **`CancelOrderControl` (`src/components/CancelOrderControl/`):** Displays "You can cancel until `<date, time>`" (via `formatDateTime`). Clicking "Cancel order" opens a Carbon danger `Modal` confirming cancellation with refund details. On confirm, calls `OrdersContext.cancelOrder(order.id, now)`, updating status to `'cancelled'` and refunding redeemed gift points. After 48h (`canCancel` is false), the button is disabled with message "The 48-hour cancellation window has closed". Supports injectable `now?: Date` prop for testing.
+- **Order card last 4 digits:** Added `cardLast4?: string` to `Order` type and `SeedOrderRecord`. `Payment.tsx` passes `cleanCardNumber.slice(-4)` on card payment; no full card details are stored. Utility `formatPaymentMethod(method, cardLast4)` in `src/utils/payment.ts` formats labels (e.g. "Credit card ending 1111").
+- **Responsive design:** `<672px` (`breakpoint-down(md)`) collapses book summary grid into 1 column and renders cancel and continue shopping buttons at full width.
+- **Test setup enhancement:** Added `ResizeObserver` mock in `src/test/setup.ts` to support Carbon v11 `Modal` under jsdom.
+- **Tests added (22 new tests across 4 files, 218 total across 30 files):**
+  - `src/pages/Confirmation.test.tsx` (10 tests): order display, debit/UPI format, unknown id empty state, guest access control, owner access, cancellation modal flow + points refund, modal dismiss, 48h expired state, continue shopping link.
+  - `src/components/CancelOrderControl/CancelOrderControl.test.tsx` (4 tests): deadline display, 48h expired disabled state, null when cancelled, confirm modal callback.
+  - `src/components/PurchaseSuccess/PurchaseSuccess.test.tsx` (2 tests): metadata and book grid rendering, cancelled tag and notification.
+  - `src/utils/payment.test.ts` (6 tests): `formatPaymentMethod` cases for cards, UPI, wallet.
+- **Quality gates (all pass):**
+  - `npm run lint` — 0 errors, 0 warnings
+  - `npm run typecheck` — 0 errors
+  - `npm test -- --run --sequence.concurrent=false` — 30 test files, 218 passed
+  - `npm run build` — ✓ built in ~17s; pre-existing large-chunk and Carbon font-URL warnings only
 
 ---
 

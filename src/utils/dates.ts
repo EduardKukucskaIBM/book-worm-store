@@ -34,6 +34,24 @@ export function formatDate(
 }
 
 /**
+ * Format a date and time for display (e.g. "23 Jul 2024, 04:30 PM").
+ */
+export function formatDateTime(
+  dateInput: string | Date,
+  options: Intl.DateTimeFormatOptions = {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  }
+): string {
+  const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput
+  return new Intl.DateTimeFormat('en-IN', options).format(date)
+}
+
+/**
  * Get delivery date label for a book.
  * eBooks return "Instant download" per D6.
  * Physical books return formatted date e.g. "Mon, 21 Jul".

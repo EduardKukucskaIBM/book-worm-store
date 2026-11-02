@@ -107,6 +107,7 @@ export interface Order {
   giftPointsRedeemed: number
   total: number
   paymentMethod: PaymentMethod
+  cardLast4?: string
   status: OrderStatus
   placedAt: string
   cancellableUntil: string

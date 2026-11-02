@@ -156,6 +156,10 @@ const Payment = (): ReactElement => {
         giftPointsRedeemed: draft.giftPointsRedeemed,
         total: draft.totals.total,
         paymentMethod: activeTab,
+        cardLast4:
+          activeTab === 'credit-card' || activeTab === 'debit-card'
+            ? cleanCardNumber.slice(-4)
+            : undefined,
         status: 'confirmed',
         estimatedDelivery: undefined,
       })

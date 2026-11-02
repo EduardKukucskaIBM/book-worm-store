@@ -81,12 +81,14 @@ describe('App Router with Shell Layouts', () => {
     })
   })
 
-  it('renders the header on BackdropLayout routes like "/confirmation/order-1"', () => {
+  it('renders the header on BackdropLayout routes like "/confirmation/order-1"', async () => {
     renderRoute('/confirmation/order-1')
 
     expect(screen.getByRole('banner')).toBeInTheDocument()
     expect(screen.getByText('Book Worm')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /shopping cart/i })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: /purchase confirmation/i })).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /order not found/i })).toBeInTheDocument()
+    })
   })
 })

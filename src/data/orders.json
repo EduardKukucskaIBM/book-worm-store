@@ -37,6 +37,7 @@
     "giftPointsRedeemed": 0,
     "total": 468.96,
     "paymentMethod": "credit-card",
+    "cardLast4": "1111",
     "status": "confirmed",
     "offsetHoursPlaced": -2,
     "offsetDaysDelivery": 3

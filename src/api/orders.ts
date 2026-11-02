@@ -17,6 +17,7 @@ interface SeedOrderRecord {
   giftPointsRedeemed: number
   total: number
   paymentMethod: PaymentMethod
+  cardLast4?: string
   status: OrderStatus
   offsetHoursPlaced?: number
   offsetDaysDelivery?: number
@@ -45,6 +46,7 @@ export function generateSeedOrders(now: Date = new Date()): Order[] {
       giftPointsRedeemed: seed.giftPointsRedeemed,
       total: seed.total,
       paymentMethod: seed.paymentMethod,
+      cardLast4: seed.cardLast4,
       status: seed.status,
       placedAt: placedDate.toISOString(),
       cancellableUntil: cancellableUntilDate.toISOString(),

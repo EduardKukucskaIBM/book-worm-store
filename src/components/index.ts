@@ -110,3 +110,9 @@ export { WALLET_OPTIONS } from './WalletForm/walletOptions'
 
 export { PaymentStatus } from './PaymentStatus/PaymentStatus'
 export type { PaymentStatusProps, PaymentState } from './PaymentStatus/PaymentStatus'
+
+export { CancelOrderControl } from './CancelOrderControl/CancelOrderControl'
+export type { CancelOrderControlProps } from './CancelOrderControl/CancelOrderControl'
+
+export { PurchaseSuccess } from './PurchaseSuccess/PurchaseSuccess'
+export type { PurchaseSuccessProps } from './PurchaseSuccess/PurchaseSuccess'
