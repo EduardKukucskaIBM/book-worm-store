@@ -1,0 +1,20 @@
+@use '@carbon/react/scss/spacing' as *;
+
+.coupon-input {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-03;
+}
+
+.coupon-input__field {
+  flex: 1;
+  min-width: 0;
+}
+
+.coupon-input__apply {
+  flex-shrink: 0;
+}
+
+.coupon-input--applied {
+  align-items: center;
+}

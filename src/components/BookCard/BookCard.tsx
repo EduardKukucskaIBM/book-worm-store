@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react'
+import type { ReactElement, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { Book, Category } from '../../types'
 import CoverPlaceholder from '../CoverPlaceholder/CoverPlaceholder'
@@ -15,6 +15,8 @@ export interface BookCardProps {
   variant?: 'catalogue' | 'related' | 'summary' | 'cart' | 'order' | 'wishlist'
   className?: string
   now?: Date
+  /** Extra controls rendered under the price/delivery (e.g. quantity stepper and remove in the `cart` variant). */
+  children?: ReactNode
 }
 
 export const BookCard = ({
@@ -24,6 +26,7 @@ export const BookCard = ({
   variant = 'catalogue',
   className = '',
   now,
+  children,
 }: BookCardProps): ReactElement => {
   return (
     <article
@@ -37,7 +40,11 @@ export const BookCard = ({
           tabIndex={-1}
           aria-hidden="true"
         >
-          <CoverPlaceholder book={book} authorName={authorName} size="md" />
+          <CoverPlaceholder
+            book={book}
+            authorName={authorName}
+            size={variant === 'cart' ? 'lg' : 'md'}
+          />
         </Link>
       </div>
 
@@ -73,6 +80,8 @@ export const BookCard = ({
           <PriceTag price={book.price} className="book-card__price" />
           <DeliveryDate book={book} now={now} className="book-card__delivery" />
         </div>
+
+        {children && <div className="book-card__actions">{children}</div>}
       </div>
     </article>
   )

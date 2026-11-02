@@ -386,7 +386,7 @@ Each sub-task is independent enough to be implemented and reviewed on its own, i
 - **Expected outcomes:** cart lines with steppers, validated address form, saved-address autofill for logged-in users, optional login prompt for guests, coupon `BOOKWORM100`, gift points for logged-in users (1 point = ₹1, capped), live Grand Total, Pay Now leading to `/payment`; empty-cart state.
 - **Todo:** `CartList`, `QuantityStepper`, `AddressForm`, `LoginPrompt`, `CouponInput`, `GiftPointsRedeem`, `PriceSummary`; the Checkout page; pricing utility wired in.
 - **Relevant context:** screenshot 03. With the 12% tax constant the design's two-book example (subtotal ₹508) gives tax ₹60.96 and, after the ₹100 coupon, ₹468.96. The design shows ₹62.00 and ₹470, which are illustrative.
-- **Status:** `[ ] pending`
+- **Status:** `[x] complete`
 
 ### ST8 — Payment and payment confirmation
 - **Intent:** J8, J10.
@@ -579,6 +579,37 @@ _(append after each sub-task)_
   - `npm run typecheck` — 0 errors
   - `npm test` — 24 test files, 140 passed
   - `npm run build` — ✓ production build succeeded; only pre-existing Carbon font-URL warnings
+
+#### ST7 handover
+- **Checkout page (`src/pages/Checkout.tsx`, `Checkout.scss`):** replaces the placeholder. Breadcrumb Home / Shopping Cart, `<h1>` "Shopping Cart", then (for a non-empty cart) optional `LoginPrompt` (guests only), cart tile, an Address tile and a Grand Total tile (side by side ≥1056px, stacked below), and a "You may also like" shelf. Empty cart (or a cart whose ids are all unknown to the catalogue) renders `EmptyState` (`data-testid="cart-empty"`) with a "Browse the catalogue" link to `/`. While `useCart().lines` is still resolving it shows a Carbon skeleton.
+- **New components (`src/components/`, all exported from the barrel):**
+  - `QuantityStepper` — Carbon `NumberInput` (min 1, `hideLabel`); the − / + buttons are named "Decrease/Increase quantity of <title>" through `translateWithId`. Only forwards integers ≥ min.
+  - `CartList` — `<ul>` of `BookCard variant="cart"` with a stepper and a ghost "Remove" button as children (`aria-label` "Remove <title> from cart").
+  - `AddressForm` — controlled by `value` / `onChange`; Carbon `TextInput` / `Select` / `Checkbox`. Inline errors show for a field after blur, or for all fields once `showAllErrors` is set. Error text comes from `validateAddress` (ST2), nothing duplicated. When `savedAddress` is passed it renders the "Use Saved Address" checkbox; ticking it makes every field `readOnly` (the two selects `disabled`) and suppresses errors. Field ids are `address-<field>` (`addressFieldId`).
+  - `LoginPrompt` — "Log in for saved address, gift points and order history." with a link to `/login?redirect=/checkout`. The cart is untouched (it lives in `CartContext`).
+  - `CouponInput` — text + Apply. Codes are trimmed and upper-cased; an unknown code shows "This coupon code is not valid", an empty one "Enter a coupon code". Once applied it becomes a `DismissibleTag` ("BOOKWORM100 applied (−₹100)") whose close button removes it. Validity comes from `getCouponDiscount`.
+  - `GiftPointsRedeem` — balance, a `NumberInput` (0..max) and a "Redeem max" / "Clear" toggle. Rendered by `PriceSummary` only when a `giftPoints` prop is passed, which `Checkout` does only for logged-in users.
+  - `PriceSummary` — "Grand Total": Price (n items), Tax (12%), Delivery Charges (Free when 0), `CouponInput`, Discount, optional gift-points row, Total Amount, Pay Now. It is purely presentational: every figure comes from the `PriceBreakdown` prop.
+- **Pricing (single source of truth):** `Checkout` calls `calculatePricing(lines, coupon, requestedPoints, balance)` on every render; the redeemable cap is `maxRedeemablePoints(balance, total-with-0-points)`. Nothing is computed in components. The cap shrinks when a coupon is applied, and the redeemed value is clamped again inside `calculatePricing`, so a stale `requestedPoints` can never overspend. With the design's two books: subtotal ₹508.00, tax ₹60.96, total ₹568.96 (₹468.96 with BOOKWORM100). The design's ₹62 / ₹470 are illustrative (see ST7 context).
+- **Illustration (D7):** `.price-summary__illustration` is built only from CSS (radial-gradient field, three rotated "book" blocks, diamond confetti), Carbon tokens only, `aria-hidden`. It is `display: none` below 672px and shown from `md` up.
+- **Responsive (section 5):** <672px — all sections stacked, address fields one per row (phone code + number stay on one row), illustration hidden, and Pay Now is `position: fixed` in a bottom bar (`.price-summary__pay`). The bar has a fixed height and `.checkout` has the same amount as bottom padding, both taken from `$pay-bar-height` in `src/styles/_pay-bar.scss` (3rem button + 2 × `$spacing-04`, plus `env(safe-area-inset-bottom)`), so the last content can always be scrolled above the bar. The padding is removed from 672px up. 672–1055px — cart lines in 2 columns, address form in a 2-column grid, address and summary stacked. ≥1056px — designed layout (12-column address grid, summary at 38% width on the right).
+- **Pay Now:** validates `validateAddress(address)`. On failure it sets `showAllErrors` and focuses the first invalid field in DOM order (`ADDRESS_FIELD_ORDER` in `utils/address.ts`). On success it builds a `CheckoutDraft`, saves it and calls `navigate('/payment')`. Blank address line 2 is stored as `undefined`.
+- **Checkout draft for ST8 (important):**
+  - Type `CheckoutDraft` in `types/`: `{ userId | null, lines: OrderItem[] (bookId, title, unitPrice snapshot, quantity), address, couponCode | null, giftPointsRedeemed, totals: PriceBreakdown, savedAt (ISO) }`.
+  - Helpers in `utils/checkoutDraft.ts`: `saveCheckoutDraft`, `loadCheckoutDraft()` (returns `null` when missing or invalid — `/payment` should then redirect to `/checkout`, per section 2), `clearCheckoutDraft`, `isCheckoutDraft`. Stored in `localStorage` under `STORAGE_KEYS.checkoutDraft` (`bookworm.checkoutDraft`), so it survives a refresh on `/payment`.
+  - ST8 should build the `Order` from `draft.lines/address/couponCode/totals` via `useOrders().addOrder` (which spends `giftPointsRedeemed`), then `clearCart()` and `clearCheckoutDraft()`. **Re-run `calculatePricing` on the draft's lines before charging** if prices could have changed; the draft totals are a snapshot.
+  - The draft is not cleared by Checkout itself; it is overwritten on the next Pay Now.
+- **Other shared additions:** `utils/address.ts` (`EMPTY_ADDRESS` with +91 / India, `ADDRESS_FIELD_ORDER`, `addressFieldId`). `BookCard` gained optional `children` (rendered in `.book-card__actions`) and a `cart` variant (large cover, no hover tint); existing variants are unchanged.
+- **You may also like:** `useRecommendations(candidates, 3)` where `candidates` = catalogue minus the cart's book ids, rendered with the existing `BookShelf`. Guests and users without orders therefore get the top bestsellers that are not in the cart. The shelf's own title is overridden to "You may also like".
+- **Country / phone-code lists** are small hard-coded lists inside `AddressForm` (India default; +91 default); extend them there if needed. Phone validation is still the ST2 rule (10 digits), regardless of code.
+- **Not done / for later:** Pay Now does not re-check stock or prices; logging in from the prompt does not carry typed address values back (the form is empty after returning, the cart is kept); "Use Saved Address" state is not persisted across reloads; browser-level visual check at 390 / 820 / 1440px is left to ST11 (this task was verified by tests, lint, typecheck and build only).
+- **Tests added (29 new in `src/pages/Checkout.test.tsx`, 169 total across 25 files):** totals and breadcrumb/title; quantity +/- updates totals live and stays ≥ 1; remove (and removing the last line → empty state); empty cart state with catalogue link; coupon valid (case-insensitive) / invalid / empty / removed; login prompt and its redirect link for guests only; gift points hidden for guests, balance shown when logged in, redeem max = ₹250, cap by floor(payable) for a cheap order and after a coupon; saved address fills and locks (and unlocks); defaults +91 / India; inline validation on blur; address line 1 required, line 2 optional; invalid form blocks Pay Now, shows all errors and focuses the first invalid field; valid form (guest) saves the draft with lines / address / coupon / totals and navigates to `/payment`; logged-in draft with saved address and 250 redeemed points; "You may also like" excludes cart books and offers a book again once removed.
+- **Test note:** the long address fill uses `user.paste` instead of `user.type` — typing ~60 characters key by key exceeded Vitest's 5 s default when the whole suite ran in parallel.
+- **Quality gates (all pass):**
+  - `npm run lint` — 0 errors, 0 warnings
+  - `npm run typecheck` — 0 errors
+  - `npm test` — 25 test files, 169 passed
+  - `npm run build` — ✓ built; Vite prints the large-chunk (>500 kB) notice and the known Carbon font-URL warnings, both non-fatal
 
 ---
 

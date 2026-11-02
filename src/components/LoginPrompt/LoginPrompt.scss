@@ -1,0 +1,36 @@
+@use '@carbon/react/scss/spacing' as *;
+
+.login-prompt {
+  display: flex;
+  align-items: center;
+  gap: $spacing-04;
+  padding: $spacing-04 $spacing-05;
+  background-color: var(--cds-layer-01);
+  border-left: 3px solid var(--cds-support-info);
+  color: var(--cds-text-primary);
+}
+
+.login-prompt__icon {
+  flex-shrink: 0;
+  fill: var(--cds-support-info);
+}
+
+.login-prompt__text {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.login-prompt__link {
+  color: var(--cds-link-primary);
+  white-space: nowrap;
+
+  &:hover {
+    color: var(--cds-link-primary-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cds-focus);
+    outline-offset: 2px;
+  }
+}

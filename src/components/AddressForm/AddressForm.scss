@@ -1,0 +1,90 @@
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/breakpoint' as bp;
+
+.address-form__saved {
+  margin-bottom: $spacing-06;
+}
+
+// <672px: every field on its own row (phone code + number stay on one row)
+.address-form__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-05;
+}
+
+.address-form__address {
+  display: grid;
+  gap: $spacing-05;
+}
+
+.address-form__group-label {
+  display: block;
+  margin-bottom: $spacing-03;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  letter-spacing: 0.32px;
+  color: var(--cds-text-secondary);
+}
+
+.address-form__phone-row {
+  display: grid;
+  grid-template-columns: 6rem 1fr;
+  gap: $spacing-02;
+}
+
+// 672–1055px: two-column grid
+@include bp.breakpoint(md) {
+  .address-form__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .address-form__address,
+  .address-form__email,
+  .address-form__phone {
+    grid-column: 1 / -1;
+  }
+}
+
+// >=1056px: designed layout, 12 columns
+@include bp.breakpoint(lg) {
+  .address-form__grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .address-form__first {
+    grid-column: span 3;
+  }
+
+  .address-form__last {
+    grid-column: span 3;
+  }
+
+  .address-form__address {
+    grid-column: span 6;
+  }
+
+  .address-form__email {
+    grid-column: span 6;
+  }
+
+  .address-form__city {
+    grid-column: span 3;
+  }
+
+  .address-form__pin {
+    grid-column: span 3;
+  }
+
+  .address-form__phone {
+    grid-column: span 6;
+  }
+
+  .address-form__state {
+    grid-column: span 3;
+  }
+
+  .address-form__country {
+    grid-column: span 3;
+  }
+}

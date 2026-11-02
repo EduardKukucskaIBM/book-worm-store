@@ -22,5 +22,6 @@ export const STORAGE_KEYS = {
   cart: 'bookworm.cart',
   orders: 'bookworm.orders',
   wishlist: 'bookworm.wishlist',
+  checkoutDraft: 'bookworm.checkoutDraft',
 } as const
 

@@ -129,6 +129,17 @@ export interface PriceBreakdown {
   itemCount: number
 }
 
+/** Snapshot written by Checkout (ST7) when "Pay Now" succeeds; read by Payment (ST8). */
+export interface CheckoutDraft {
+  userId: ID | null
+  lines: OrderItem[]
+  address: Address
+  couponCode: string | null
+  giftPointsRedeemed: number
+  totals: PriceBreakdown
+  savedAt: string
+}
+
 export type SortOption =
   | 'relevance'
   | 'price-low-high'

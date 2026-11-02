@@ -146,3 +146,35 @@
     font-size: 0.6875rem;
   }
 }
+
+.book-card__actions {
+  margin-top: $spacing-05;
+}
+
+// Cart variant – large cover on the left, stepper + remove under the price (screenshot 03)
+.book-card--cart {
+  padding: $spacing-03;
+  gap: $spacing-06;
+
+  &:hover {
+    background-color: transparent;
+  }
+
+  .book-card__cover-wrapper .cover-placeholder--lg {
+    width: 140px;
+    height: 196px;
+    min-width: 140px;
+
+    @include bp.breakpoint(lg) {
+      width: 240px;
+      height: 336px;
+      min-width: 240px;
+    }
+  }
+
+  .book-card__title {
+    font-size: 1.25rem;
+    font-weight: 400;
+  }
+}
+
