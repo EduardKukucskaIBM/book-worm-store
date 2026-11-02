@@ -1,0 +1,9 @@
+# Project Coding Rules (Non-Obvious Only)
+
+- **Carbon Component Styles**: When importing a new Carbon component in JSX, you MUST also add its corresponding `@use '@carbon/react/scss/components/<name>'` partial in [`src/styles/_theme.scss`](../../src/styles/_theme.scss:1). The full `@carbon/react` stylesheet is intentionally not loaded.
+- **Fast Refresh Rule**: Never export constants, interfaces, or helper functions from `.tsx` component files; keep them in colocated `.ts` files (e.g. `walletOptions.ts`, `paymentTabs.ts`) to satisfy `react-refresh/only-export-components`.
+- **Safe Storage Only**: Use `loadJSON()`, `saveJSON()`, and `removeItem()` from [`src/utils/storage.ts`](../../src/utils/storage.ts:1) instead of direct `localStorage` calls to prevent errors in private browsing or quota limits.
+- **Checkout to Payment State**: Do not pass checkout state via React Router params or Context. Write the snapshot using `saveCheckoutDraft()` from [`src/utils/checkoutDraft.ts`](../../src/utils/checkoutDraft.ts:27) before navigating to `/payment`.
+- **Single Pricing Calculation**: Always calculate subtotal, tax, coupon discounts, and gift points through `calculatePricing()` in [`src/utils/pricing.ts`](../../src/utils/pricing.ts:40).
+- **Time Injections in Tests**: Pure utility functions handling dates (`canCancel`, `getCancellationTimeRemaining`, `getDeliveryDateLabel`, `validateCard`) accept an optional `now: Date` parameter; always pass fixed `Date` objects in tests to avoid test flakes across years.
+- **Mock Payment Trigger**: Card number `'4000000000000002'` is Luhn-valid and explicitly designated in [`src/pages/Payment.tsx`](../../src/pages/Payment.tsx:27) to trigger simulated gateway payment failures.
