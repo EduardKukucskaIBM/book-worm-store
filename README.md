@@ -4,23 +4,9 @@ Book Worm is a responsive, accessible modern e-bookstore web application built w
 
 ---
 
-## Screenshots
-
-> Visual captures are available in [`docs/screenshots/`](docs/screenshots/):
-
-| Journey / Screen             | Desktop View (1440px)                                                     | Mobile View (390px)                                                     |
-| ---------------------------- | ------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| **Home & Catalogue**         | ![Home Desktop](docs/screenshots/01-home-desktop.png)                     | ![Home Mobile](docs/screenshots/01-home-mobile.png)                     |
-| **Product Detail & Reviews** | ![Product Detail Desktop](docs/screenshots/02-product-detail-desktop.png) | ![Product Detail Mobile](docs/screenshots/02-product-detail-mobile.png) |
-| **Shopping Cart & Checkout** | ![Cart Desktop](docs/screenshots/03-cart-checkout-desktop.png)            | ![Cart Mobile](docs/screenshots/03-cart-checkout-mobile.png)            |
-| **Payment Options**          | ![Payment Desktop](docs/screenshots/04-payment-desktop.png)               | ![Payment Mobile](docs/screenshots/04-payment-mobile.png)               |
-| **Order Confirmation**       | ![Confirmation Desktop](docs/screenshots/05-confirmation-desktop.png)     | ![Confirmation Mobile](docs/screenshots/05-confirmation-mobile.png)     |
-
----
-
 ## Features (Customer Journeys)
 
-All 12 core customer journeys defined in [`docs/PLAN.md`](docs/PLAN.md:315) are fully implemented:
+All 12 core customer journeys defined in [`docs/PLAN.md`](docs/PLAN.md) are fully implemented:
 
 1. **J1 — Login (optional):** Authenticate with demo credentials or continue as a guest; cart contents persist seamlessly across login state transitions.
 2. **J2 — Categories:** Filter catalogue shelves and views via parent and leaf category navigation in the sidebar and deep-links.
@@ -53,8 +39,7 @@ book-worm-store/
 ├── docs/                     # Architecture, project plan, OpenAPI specs, and data models
 │   ├── PLAN.md               # Master blueprint, sub-tasks, and implementation handovers
 │   ├── data-model.md         # PostgreSQL database schema & ER diagram
-│   ├── openapi.yaml          # OpenAPI 3.0 specification for backend services
-│   └── screenshots/          # Desktop and mobile UI capture assets
+│   └── openapi.yaml          # OpenAPI 3.0 specification for backend services
 ├── src/
 │   ├── api/                  # Async data access layer & mock backend services
 │   ├── components/           # Carbon-themed reusable UI components
@@ -132,11 +117,11 @@ The application comes pre-loaded with mock datasets in [`src/data/`](src/data/):
 
 ## Quality & Performance
 
-Book Worm adheres to strict enterprise software standards across testing, accessibility, and bundle optimization:
+Quality checks:
 
 - **Automated Tests:** 284 tests across 42 test suites (`100% passing` in default parallel `vmThreads` mode).
 - **Code Coverage:** **90.6%** line coverage / **81.7%** branch coverage across utility, context, and component layers.
-- **Lighthouse Audits:** **100/100** Accessibility and **100/100** Best Practices across every route on desktop and mobile viewports.
+- **Lighthouse (home page, mobile):** **100** Accessibility, **100** Best Practices.
 - **Bundle Optimization:**
   - Selective Carbon component styling (only required partials imported).
   - Route-level code splitting via `React.lazy` with eager route preloading.
@@ -150,8 +135,6 @@ Book Worm adheres to strict enterprise software standards across testing, access
 | **Chunk Warning**    | Exceeded 500 kB limit        | **0 warnings** (all chunks < 270 kB)               |
 
 ---
-
-## How I Used IBM Bob
 
 ## How I used IBM Bob
 
@@ -181,8 +164,9 @@ Every prompt and my review of the result is logged in [`PROMPTS.md`](PROMPTS.md)
 
 ## Known Limitations
 
-As outlined in the architectural specification in [`docs/PLAN.md`](docs/PLAN.md:738):
+As outlined in the architectural specification in [`docs/PLAN.md`](docs/PLAN.md):
 
+- **Guest orders:** a guest's order confirmation can be opened by anyone who has its link.
 - **Mock Payment Gateway:** Payment transactions simulate realistic asynchronous gateway processing delays (1.5s), but do not connect to a real banking network. Card details are validated client-side and never stored or transmitted.
 - **Mock Authentication:** Login authenticates against local seeded data without server-side JWT issuance or session expiry. Session state is retained in browser storage (`bookworm.session`).
 - **Client-Side Storage Isolation:** Shopping cart, order history, wishlist, and user reviews reside within browser `localStorage`. Data is local to each browser instance.
