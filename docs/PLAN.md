@@ -428,7 +428,7 @@ Each sub-task is independent enough to be implemented and reviewed on its own, i
   - eBook "Instant download" vs delivery date.
 - **Todo:** colocate `*.test.ts(x)` with the units; add provider-aware render helpers in `test/`; finish by running the full gate: `lint`, `typecheck`, `test`, `build`.
 - **Relevant context:** section 4 (derived behaviour), J6, J7, J9, J11.
-- **Status:** `[ ] pending`
+- **Status:** `[x] done`
 
 ### Handover notes
 _(append after each sub-task)_
@@ -704,6 +704,34 @@ _(append after each sub-task)_
   - `npm run typecheck`: 0 errors
   - `npm test` (plain): 36 files, 262 passed
   - `npm run build`: ✓ built, no large-chunk warning
+
+#### ST12 handover
+- **Test Speed & Isolation Fixes:**
+  - Removed timeout masking in `vitest.config.ts` (restored default 5s `testTimeout`/`hookTimeout`) and `src/test/setup.ts` (restored default 1s `asyncUtilTimeout`).
+  - Set `pool: 'vmThreads'` in `vitest.config.ts` for clean worker-thread file isolation and instant start.
+  - Added `preloadRoutes()` in `src/router/lazyPages.ts` and called it in `src/test/setup.ts` to eagerly resolve lazy page chunks before tests run.
+  - Replaced real 1.5s payment and toast delays with injectable `paymentDelayMs` (`Payment.tsx`) and `navigationDelayMs` (`OrderCard.tsx`, `Orders.tsx`) defaulting to production timings and `0` in tests.
+  - Replaced character-by-character typing with fast `fireEvent.change` / `userEvent.paste` across form test suites (`AddressForm.test.tsx`, `Checkout.test.tsx`, `Payment.test.tsx`, `ReviewForm.test.tsx`).
+- **New Unit and Component Tests Added (22 new tests across 6 files, 284 total across 42 files):**
+  - `src/test/test-utils.tsx`: `renderWithProviders` wrapper helper supporting initial route and mock context state.
+  - `src/components/AddressForm/AddressForm.test.tsx` (7 tests): all required field validation, email format, 6-digit PIN code, 10-digit phone, saved address toggle visibility for logged-in users with saved addresses, and autofill behavior.
+  - `src/components/DeliveryDate/DeliveryDate.test.tsx` (3 tests): "Instant download" for eBooks, formatted date for physical books, and custom prefix handling.
+  - `src/components/ReviewForm/ReviewForm.test.tsx` (3 tests): 0/100 character counter and over-limit indicator, star rating selection and submit enablement, reset and onSubmit callback.
+  - `src/components/RatingStars/RatingStars.test.tsx` (2 tests): display mode star counting and interactive button group selection.
+  - `src/components/QuantityStepper/QuantityStepper.test.tsx` (2 tests): increment/decrement callbacks, disabling decrement at min quantity 1.
+  - `src/components/CouponInput/CouponInput.test.tsx` (5 tests): valid coupon apply (`BOOKWORM100`), invalid coupon error, case-insensitivity, Enter key apply, and remove coupon action.
+- **Design and A11y Polish:**
+  - `Lost Kitten` cover: Restored design orange `#eb6200` with dark text `#161616`, achieving 5.28:1 contrast ratio (exceeds WCAG AA 4.5:1 requirement).
+  - AppHeader: Added `$spacing-03` margin between brand book icon and "Book Worm" title.
+- **Test Coverage:**
+  - Added `@vitest/coverage-v8` with script `"coverage": "vitest run --coverage"`.
+  - Configured coverage inclusion for `src/` (excluding tests, types, data, and index entries).
+- **Quality gates (all pass):**
+  - `npm run lint`: 0 errors, 0 warnings
+  - `npm run typecheck`: 0 errors
+  - `npm test` (plain parallel): 42 test files, 284 passed
+  - `npm run build`: ✓ built cleanly
+  - `npm run coverage`: line and branch coverage reported for `src/utils`, `src/context`, and `src/components`
 
 ---
 

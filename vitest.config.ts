@@ -6,14 +6,24 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    // Form tests type key by key; the 5 s default is too tight when all files run in parallel
-    testTimeout: 20000,
-    hookTimeout: 20000,
+    pool: 'vmThreads',
     setupFiles: ['./src/test/setup.ts'],
     css: {
       modules: {
         classNameStrategy: 'non-scoped',
       },
+    },
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'text-summary', 'html'],
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: [
+        'src/**/*.test.{ts,tsx}',
+        'src/test/**',
+        'src/types/**',
+        'src/main.tsx',
+        'src/vite-env.d.ts',
+      ],
     },
   },
 })

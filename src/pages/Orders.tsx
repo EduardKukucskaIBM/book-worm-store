@@ -12,7 +12,11 @@ import { useOrders } from '../context/OrdersContext'
 import type { Author, Book, Category } from '../types'
 import './Orders.scss'
 
-const Orders = (): ReactElement => {
+export interface OrdersProps {
+  navigationDelayMs?: number
+}
+
+export const Orders = ({ navigationDelayMs }: OrdersProps): ReactElement => {
   const { user } = useAuth()
   const { getOrdersForUser } = useOrders()
 
@@ -78,6 +82,7 @@ const Orders = (): ReactElement => {
                 books={catalogue.books}
                 authors={catalogue.authors}
                 categories={catalogue.categories}
+                navigationDelayMs={navigationDelayMs}
               />
             </li>
           ))}

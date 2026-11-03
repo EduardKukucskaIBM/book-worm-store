@@ -30,7 +30,11 @@ const EMPTY_CARD: CardFormData = { cardNumber: '', cardHolder: '', cvv: '', expi
 const EMPTY_UPI: UpiFormData = { upiId: '' }
 const EMPTY_WALLET: WalletFormData = { walletName: '' }
 
-const Payment = (): ReactElement => {
+export interface PaymentProps {
+  paymentDelayMs?: number
+}
+
+export const Payment = ({ paymentDelayMs = 1500 }: PaymentProps): ReactElement => {
   const navigate = useNavigate()
   const { clearCart } = useCart()
   const { addOrder } = useOrders()
@@ -134,7 +138,7 @@ const Payment = (): ReactElement => {
           ...(activeTab === 'wallet' ? { walletName: walletData.walletName } : {}),
           simulateFailure,
         },
-        1500,
+        paymentDelayMs,
       )
 
       if (!response.success) {

@@ -12,3 +12,17 @@ export const Orders = lazy(() => import('../pages/Orders'))
 export const Wishlist = lazy(() => import('../pages/Wishlist'))
 export const Writers = lazy(() => import('../pages/Writers'))
 export const NotFound = lazy(() => import('../pages/NotFound'))
+
+export const preloadRoutes = (): Promise<unknown[]> =>
+  Promise.all([
+    import('../pages/Home'),
+    import('../pages/ProductDetail'),
+    import('../pages/Checkout'),
+    import('../pages/Payment'),
+    import('../pages/Confirmation'),
+    import('../pages/Login'),
+    import('../pages/Orders'),
+    import('../pages/Wishlist'),
+    import('../pages/Writers'),
+    import('../pages/NotFound'),
+  ])

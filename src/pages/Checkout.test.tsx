@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { render, screen, waitFor, within, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom'
 import { STORAGE_KEYS } from '../config'
@@ -71,7 +71,7 @@ const waitForLines = async (): Promise<void> => {
 
 const total = (): string => screen.getByTestId('summary-total').textContent ?? ''
 
-const fillValidAddress = async (user: ReturnType<typeof userEvent.setup>): Promise<void> => {
+const fillValidAddress = async (): Promise<void> => {
   const fields: Array<[string, string]> = [
     ['First Name', 'Asha'],
     ['Last Name', 'Rao'],
@@ -83,8 +83,7 @@ const fillValidAddress = async (user: ReturnType<typeof userEvent.setup>): Promi
     ['State', 'Maharashtra'],
   ]
   for (const [label, text] of fields) {
-    await user.click(screen.getByLabelText(label))
-    await user.paste(text)
+    fireEvent.change(screen.getByLabelText(label), { target: { value: text } })
   }
 }
 
@@ -189,7 +188,8 @@ describe('Checkout page (ST7)', () => {
       renderCheckout()
       await waitForLines()
 
-      await user.type(screen.getByLabelText('Coupon code'), 'bookworm100')
+      await user.click(screen.getByLabelText('Coupon code'))
+      await user.paste('bookworm100')
       await user.click(screen.getByRole('button', { name: 'Apply' }))
 
       expect(screen.getByTestId('coupon-applied')).toHaveTextContent('BOOKWORM100')
@@ -202,7 +202,8 @@ describe('Checkout page (ST7)', () => {
       renderCheckout()
       await waitForLines()
 
-      await user.type(screen.getByLabelText('Coupon code'), 'SAVE50')
+      await user.click(screen.getByLabelText('Coupon code'))
+      await user.paste('SAVE50')
       await user.click(screen.getByRole('button', { name: 'Apply' }))
 
       expect(await screen.findByText('This coupon code is not valid')).toBeInTheDocument()
@@ -224,7 +225,8 @@ describe('Checkout page (ST7)', () => {
       renderCheckout()
       await waitForLines()
 
-      await user.type(screen.getByLabelText('Coupon code'), 'BOOKWORM100')
+      await user.click(screen.getByLabelText('Coupon code'))
+      await user.paste('BOOKWORM100')
       await user.click(screen.getByRole('button', { name: 'Apply' }))
       expect(total()).toBe('₹468.96')
 
@@ -305,7 +307,8 @@ describe('Checkout page (ST7)', () => {
       renderCheckout({ loggedIn: true, cart: [[VANISHING, 1]] })
       await screen.findByTestId(`book-card-${VANISHING}`)
 
-      await user.type(screen.getByLabelText('Coupon code'), 'BOOKWORM100')
+      await user.click(screen.getByLabelText('Coupon code'))
+      await user.paste('BOOKWORM100')
       await user.click(screen.getByRole('button', { name: 'Apply' }))
 
       // payable is now ₹10.88 -> 10 points
@@ -408,8 +411,10 @@ describe('Checkout page (ST7)', () => {
       renderCheckout()
       await waitForLines()
 
-      await user.type(screen.getByLabelText('First Name'), 'Asha')
-      await user.type(screen.getByLabelText('Last Name'), 'Rao')
+      await user.click(screen.getByLabelText('First Name'))
+      await user.paste('Asha')
+      await user.click(screen.getByLabelText('Last Name'))
+      await user.paste('Rao')
       await user.click(screen.getByRole('button', { name: 'Pay Now' }))
 
       expect(await screen.findByText('Address line 1 is required')).toBeInTheDocument()
@@ -421,8 +426,9 @@ describe('Checkout page (ST7)', () => {
       renderCheckout()
       await waitForLines()
 
-      await fillValidAddress(user)
-      await user.type(screen.getByLabelText('Coupon code'), 'BOOKWORM100')
+      await fillValidAddress()
+      await user.click(screen.getByLabelText('Coupon code'))
+      await user.paste('BOOKWORM100')
       await user.click(screen.getByRole('button', { name: 'Apply' }))
       await user.click(screen.getByRole('button', { name: 'Increase quantity of The Path to Success' }))
       await user.click(screen.getByRole('button', { name: 'Pay Now' }))

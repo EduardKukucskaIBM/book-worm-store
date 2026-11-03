@@ -18,6 +18,7 @@ export interface OrderCardProps {
   authors?: Author[]
   categories?: Category[]
   now?: Date
+  navigationDelayMs?: number
   onCancelled?: (updatedOrder: Order) => void
 }
 
@@ -33,6 +34,7 @@ export const OrderCard = ({
   authors = [],
   categories = [],
   now = new Date(),
+  navigationDelayMs = 1500,
   onCancelled,
 }: OrderCardProps): ReactElement => {
   const { addItem } = useCart()
@@ -57,7 +59,7 @@ export const OrderCard = ({
     setTimeout(() => {
       setToastVisible(false)
       void navigate('/checkout')
-    }, 1500)
+    }, navigationDelayMs)
   }
 
   return (
@@ -153,7 +155,7 @@ export const OrderCard = ({
                   setTimeout(() => {
                     setToastVisible(false)
                     void navigate('/checkout')
-                  }, 1500)
+                  }, navigationDelayMs)
                 }}
                 data-testid={`buy-again-${item.bookId}`}
               >

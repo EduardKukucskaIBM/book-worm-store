@@ -71,9 +71,9 @@ const KNOWN_THEMES: Record<string, CoverTheme> = {
     iconType: 'mansion-moon',
   },
   'book-lost-kitten': {
-    background: '#9c3e00',
-    color: '#ffffff',
-    accentColor: '#ffe082',
+    background: '#eb6200',
+    color: '#161616',
+    accentColor: '#161616',
     iconType: 'cat',
   },
 }
@@ -148,9 +148,9 @@ function renderCoverIcon(iconType?: string, accentColor?: string) {
             fill="#ffffff"
             opacity="0.95"
           />
-          <circle cx="42" cy="46" r="3" fill="#9c3e00" />
-          <circle cx="58" cy="46" r="3" fill="#9c3e00" />
-          <path d="M47 52 Q50 55 53 52" fill="none" stroke="#9c3e00" strokeWidth="2" />
+          <circle cx="42" cy="46" r="3" fill="#eb6200" />
+          <circle cx="58" cy="46" r="3" fill="#eb6200" />
+          <path d="M47 52 Q50 55 53 52" fill="none" stroke="#eb6200" strokeWidth="2" />
         </svg>
       )
     case 'planet-orbit':

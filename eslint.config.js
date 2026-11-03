@@ -8,7 +8,7 @@ import jsxA11y from 'eslint-plugin-jsx-a11y'
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
-  { ignores: ['dist', 'node_modules'] },
+  { ignores: ['dist', 'node_modules', 'coverage'] },
   {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
@@ -37,7 +37,10 @@ export default [
     },
   },
   {
-    files: ['**/*.test.{ts,tsx}'],
+    files: ['**/*.test.{ts,tsx}', 'src/test/**/*.{ts,tsx}'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
     languageOptions: {
       globals: {
         ...globals.browser,

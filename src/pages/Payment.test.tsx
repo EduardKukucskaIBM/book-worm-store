@@ -63,7 +63,11 @@ const FAILURE_CARD = '4000000000000002'
 
 const LocationProbe = () => <p data-testid="location">{useLocation().pathname}</p>
 
-const renderPayment = (draft: CheckoutDraft | null = VALID_DRAFT, extraSetup?: () => void) => {
+const renderPayment = (
+  draft: CheckoutDraft | null = VALID_DRAFT,
+  extraSetup?: () => void,
+  paymentDelayMs = 0,
+) => {
   localStorage.clear()
   if (draft) saveCheckoutDraft(draft)
   extraSetup?.()
@@ -71,7 +75,7 @@ const renderPayment = (draft: CheckoutDraft | null = VALID_DRAFT, extraSetup?: (
     <AppProviders>
       <MemoryRouter initialEntries={['/payment']}>
         <Routes>
-          <Route path="/payment" element={<Payment />} />
+          <Route path="/payment" element={<Payment paymentDelayMs={paymentDelayMs} />} />
           <Route
             path="/confirmation/:orderId"
             element={
@@ -90,6 +94,27 @@ const renderPayment = (draft: CheckoutDraft | null = VALID_DRAFT, extraSetup?: (
 
 // Format a card number with dashes XXXX-XXXX-XXXX-XXXX
 const fmt = (n: string) => n.replace(/(\d{4})(?=\d)/g, '$1-')
+
+const fillCard = async (
+  cardNumber = VALID_CARD,
+  cardHolder = 'Asha Rao',
+  cvv = '123',
+  expiry = '12/2030',
+) => {
+  const cardInput = screen.getByLabelText('Card Number')
+  const holderInput = screen.getByLabelText('Name on Card')
+  const cvvInput = screen.getByLabelText('CVV')
+  const expiryInput = screen.getByLabelText('Date of Expiry')
+
+  await userEvent.click(cardInput)
+  await userEvent.paste(fmt(cardNumber))
+  await userEvent.click(holderInput)
+  await userEvent.paste(cardHolder)
+  await userEvent.click(cvvInput)
+  await userEvent.paste(cvv)
+  await userEvent.click(expiryInput)
+  await userEvent.paste(expiry)
+}
 
 // ─── Tests ───────────────────────────────────────────────────────────────────
 
@@ -227,12 +252,7 @@ describe('Payment page', () => {
 
     it('shows error for past expiry (MM/YYYY)', async () => {
       renderPayment()
-      await userEvent.type(screen.getByLabelText('Card Number'), fmt(VALID_CARD))
-      await userEvent.type(screen.getByLabelText('Name on Card'), 'Asha Rao')
-      // Masking: type into the CVV show/hide toggle area
-      const cvvInput = screen.getByLabelText('CVV')
-      await userEvent.type(cvvInput, '123')
-      await userEvent.type(screen.getByLabelText('Date of Expiry'), '01/2020')
+      await fillCard(VALID_CARD, 'Asha Rao', '123', '01/2020')
       await userEvent.click(screen.getByTestId('pay-now-btn'))
       await waitFor(() => {
         expect(screen.getByText('Card is expired')).toBeInTheDocument()
@@ -241,10 +261,7 @@ describe('Payment page', () => {
 
     it('shows error for wrong expiry format (MM/YY instead of MM/YYYY)', async () => {
       renderPayment()
-      await userEvent.type(screen.getByLabelText('Card Number'), fmt(VALID_CARD))
-      await userEvent.type(screen.getByLabelText('Name on Card'), 'Asha Rao')
-      await userEvent.type(screen.getByLabelText('CVV'), '123')
-      await userEvent.type(screen.getByLabelText('Date of Expiry'), '12/26')
+      await fillCard(VALID_CARD, 'Asha Rao', '123', '12/26')
       await userEvent.click(screen.getByTestId('pay-now-btn'))
       await waitFor(() => {
         expect(screen.getByText('Expiry must be in MM/YYYY format')).toBeInTheDocument()
@@ -305,10 +322,7 @@ describe('Payment page', () => {
 
       // Fill a valid card
       await waitFor(() => screen.getByLabelText('Card Number'))
-      await userEvent.type(screen.getByLabelText('Card Number'), fmt(VALID_CARD))
-      await userEvent.type(screen.getByLabelText('Name on Card'), 'Asha Rao')
-      await userEvent.type(screen.getByLabelText('CVV'), '123')
-      await userEvent.type(screen.getByLabelText('Date of Expiry'), '12/2030')
+      await fillCard(VALID_CARD, 'Asha Rao', '123', '12/2030')
 
       await userEvent.click(screen.getByTestId('pay-now-btn'))
 
@@ -343,10 +357,7 @@ describe('Payment page', () => {
       })
 
       await waitFor(() => screen.getByLabelText('Card Number'))
-      await userEvent.type(screen.getByLabelText('Card Number'), fmt(FAILURE_CARD))
-      await userEvent.type(screen.getByLabelText('Name on Card'), 'Asha Rao')
-      await userEvent.type(screen.getByLabelText('CVV'), '123')
-      await userEvent.type(screen.getByLabelText('Date of Expiry'), '12/2030')
+      await fillCard(FAILURE_CARD, 'Asha Rao', '123', '12/2030')
 
       await userEvent.click(screen.getByTestId('pay-now-btn'))
 
@@ -375,10 +386,7 @@ describe('Payment page', () => {
       renderPayment(VALID_DRAFT)
 
       await waitFor(() => screen.getByLabelText('Card Number'))
-      await userEvent.type(screen.getByLabelText('Card Number'), fmt(FAILURE_CARD))
-      await userEvent.type(screen.getByLabelText('Name on Card'), 'Asha Rao')
-      await userEvent.type(screen.getByLabelText('CVV'), '123')
-      await userEvent.type(screen.getByLabelText('Date of Expiry'), '12/2030')
+      await fillCard(FAILURE_CARD, 'Asha Rao', '123', '12/2030')
 
       await userEvent.click(screen.getByTestId('pay-now-btn'))
       await waitFor(() => screen.getByText('Payment failed'), { timeout: 5000 })
@@ -401,10 +409,7 @@ describe('Payment page', () => {
       renderPayment(VALID_DRAFT)
 
       await waitFor(() => screen.getByLabelText('Card Number'))
-      await userEvent.type(screen.getByLabelText('Card Number'), fmt(VALID_CARD))
-      await userEvent.type(screen.getByLabelText('Name on Card'), 'Asha Rao')
-      await userEvent.type(screen.getByLabelText('CVV'), '123')
-      await userEvent.type(screen.getByLabelText('Date of Expiry'), '12/2030')
+      await fillCard(VALID_CARD, 'Asha Rao', '123', '12/2030')
 
       await userEvent.click(screen.getByTestId('pay-now-btn'))
 
@@ -428,10 +433,7 @@ describe('Payment page', () => {
       renderPayment(VALID_DRAFT)
 
       await waitFor(() => screen.getByLabelText('Card Number'))
-      await userEvent.type(screen.getByLabelText('Card Number'), fmt(VALID_CARD))
-      await userEvent.type(screen.getByLabelText('Name on Card'), 'Asha Rao')
-      await userEvent.type(screen.getByLabelText('CVV'), '123')
-      await userEvent.type(screen.getByLabelText('Date of Expiry'), '12/2030')
+      await fillCard(VALID_CARD, 'Asha Rao', '123', '12/2030')
 
       await userEvent.click(screen.getByTestId('pay-now-btn'))
 
@@ -455,13 +457,10 @@ describe('Payment page', () => {
   describe('processing state', () => {
     it('disables Pay Now button while processing', async () => {
       saveCheckoutDraft(VALID_DRAFT)
-      renderPayment(VALID_DRAFT)
+      renderPayment(VALID_DRAFT, undefined, 200)
 
       await waitFor(() => screen.getByLabelText('Card Number'))
-      await userEvent.type(screen.getByLabelText('Card Number'), fmt(VALID_CARD))
-      await userEvent.type(screen.getByLabelText('Name on Card'), 'Asha Rao')
-      await userEvent.type(screen.getByLabelText('CVV'), '123')
-      await userEvent.type(screen.getByLabelText('Date of Expiry'), '12/2030')
+      await fillCard(VALID_CARD, 'Asha Rao', '123', '12/2030')
 
       act(() => {
         void userEvent.click(screen.getByTestId('pay-now-btn'))

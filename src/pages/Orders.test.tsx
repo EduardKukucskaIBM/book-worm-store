@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom'
 import { STORAGE_KEYS } from '../config'
 import { AppProviders } from '../context/AppProviders'
@@ -100,7 +99,8 @@ const LocationProbe = () => <p data-testid="location">{useLocation().pathname}</
 const renderOrders = ({
   user = TEST_USER,
   orders = [RECENT_ORDER],
-}: { user?: User | null; orders?: Order[] } = {}) => {
+  navigationDelayMs = 50,
+}: { user?: User | null; orders?: Order[]; navigationDelayMs?: number } = {}) => {
   localStorage.clear()
   if (user) {
     localStorage.setItem(STORAGE_KEYS.session, JSON.stringify(user))
@@ -111,7 +111,7 @@ const renderOrders = ({
     <AppProviders>
       <MemoryRouter initialEntries={['/orders']}>
         <Routes>
-          <Route path="/orders" element={<Orders />} />
+          <Route path="/orders" element={<Orders navigationDelayMs={navigationDelayMs} />} />
           <Route
             path="/login"
             element={
@@ -254,7 +254,6 @@ describe('Orders page', () => {
 
   describe('Buy it again', () => {
     it('"Buy it again" adds item to cart and navigates to /checkout', async () => {
-      const user = userEvent.setup()
       // Use an order with a book that is unique in this render
       const singleItemOrder: Order = {
         ...RECENT_ORDER,
@@ -268,7 +267,7 @@ describe('Orders page', () => {
           },
         ],
       }
-      renderOrders({ orders: [singleItemOrder] })
+      renderOrders({ orders: [singleItemOrder], navigationDelayMs: 20 })
 
       // Wait for page to load
       await waitFor(() => {
@@ -276,24 +275,18 @@ describe('Orders page', () => {
       })
 
       const buyAgainBtn = screen.getByTestId('buy-again-book-art-of-focus')
-      await user.click(buyAgainBtn)
+      fireEvent.click(buyAgainBtn)
 
       // Toast should appear
-      await waitFor(() => {
-        expect(screen.getByTestId('buy-all-again-toast')).toBeInTheDocument()
-      })
+      expect(screen.getByTestId('buy-all-again-toast')).toBeInTheDocument()
 
       // Should navigate to checkout after toast
-      await waitFor(
-        () => {
-          expect(screen.getByRole('heading', { name: /checkout/i })).toBeInTheDocument()
-        },
-        { timeout: 3000 },
-      )
+      await waitFor(() => {
+        expect(screen.getByRole('heading', { name: /checkout/i })).toBeInTheDocument()
+      })
     })
 
     it('"Buy all again" adds all order items to cart and navigates to /checkout', async () => {
-      const user = userEvent.setup()
       const multiOrder: Order = {
         ...RECENT_ORDER,
         id: 'ord-multi',
@@ -312,25 +305,20 @@ describe('Orders page', () => {
           },
         ],
       }
-      renderOrders({ orders: [multiOrder] })
+      renderOrders({ orders: [multiOrder], navigationDelayMs: 20 })
 
       await waitFor(() => {
         expect(screen.getByTestId('orders-page')).toBeInTheDocument()
       })
 
       const buyAllBtn = screen.getByTestId('buy-all-again-ord-multi')
-      await user.click(buyAllBtn)
+      fireEvent.click(buyAllBtn)
+
+      expect(screen.getByTestId('buy-all-again-toast')).toBeInTheDocument()
 
       await waitFor(() => {
-        expect(screen.getByTestId('buy-all-again-toast')).toBeInTheDocument()
+        expect(screen.getByRole('heading', { name: /checkout/i })).toBeInTheDocument()
       })
-
-      await waitFor(
-        () => {
-          expect(screen.getByRole('heading', { name: /checkout/i })).toBeInTheDocument()
-        },
-        { timeout: 3000 },
-      )
     })
   })
 
