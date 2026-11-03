@@ -1,0 +1,109 @@
+.book-gallery {
+  display: flex;
+  flex-direction: row;
+  gap: var(--cds-spacing-04, 1rem);
+  align-items: flex-start;
+  flex-wrap: wrap; // stacks the covers on narrow screens instead of overflowing
+  max-width: 100%;
+
+  &__front {
+    flex: 0 0 auto;
+
+    .cover-placeholder {
+      width: 170px;
+      min-height: 240px;
+    }
+  }
+
+  &__back {
+    flex: 1 1 auto;
+    min-height: 240px;
+    max-width: 260px;
+    min-width: min(100%, 12rem);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  &__back-inner {
+    background-color: var(--cds-layer-02, #393939);
+    color: var(--cds-text-primary, #f4f4f4);
+    padding: var(--cds-spacing-05, 1rem);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: var(--cds-body-short-01-font-size, 0.875rem);
+    line-height: var(--cds-body-short-01-line-height, 1.28572);
+  }
+
+  &__back-quote {
+    margin: 0 0 var(--cds-spacing-04, 0.75rem);
+    font-style: italic;
+    color: var(--cds-text-secondary, #c6c6c6);
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    // Limit to ~6 lines
+    display: -webkit-box;
+    -webkit-line-clamp: 7;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    border: none;
+    padding: 0;
+  }
+
+  &__back-author-section {
+    margin-bottom: var(--cds-spacing-04, 0.75rem);
+  }
+
+  &__back-about-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--cds-text-secondary, #c6c6c6);
+    margin: 0 0 var(--cds-spacing-02, 0.25rem);
+  }
+
+  &__back-author-bio {
+    font-size: 0.75rem;
+    color: var(--cds-text-secondary, #c6c6c6);
+    margin: 0;
+  }
+
+  &__back-footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-top: auto;
+  }
+
+  &__back-initials {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--cds-layer-03, #525252);
+    color: var(--cds-text-primary, #f4f4f4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  &__back-isbn-wrap {
+    text-align: right;
+  }
+
+  &__back-isbn {
+    font-size: 0.6875rem;
+    color: var(--cds-text-secondary, #c6c6c6);
+    margin: 0 0 var(--cds-spacing-01, 0.125rem);
+  }
+
+  &__back-barcode {
+    color: var(--cds-text-secondary, #c6c6c6);
+    display: block;
+    margin-left: auto;
+  }
+}

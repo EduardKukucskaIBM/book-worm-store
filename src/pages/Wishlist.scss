@@ -1,0 +1,30 @@
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/breakpoint' as bp;
+
+.wishlist-page {
+  width: 100%;
+}
+
+.wishlist-page__title {
+  font-size: 1.75rem;
+  font-weight: 400;
+  color: var(--cds-text-primary, #ffffff);
+  margin: $spacing-05 0 $spacing-06;
+}
+
+.wishlist-page__grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-05;
+
+  @include bp.breakpoint(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include bp.breakpoint(lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

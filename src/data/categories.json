@@ -1,0 +1,138 @@
+[
+  {
+    "id": "cat-fiction",
+    "name": "Fiction",
+    "slug": "fiction"
+  },
+  {
+    "id": "cat-non-fiction",
+    "name": "Non-Fiction",
+    "slug": "non-fiction"
+  },
+  {
+    "id": "cat-self-help",
+    "name": "Self Help",
+    "parentId": "cat-non-fiction",
+    "slug": "self-help"
+  },
+  {
+    "id": "cat-philosophy",
+    "name": "Philosophy",
+    "parentId": "cat-non-fiction",
+    "slug": "philosophy"
+  },
+  {
+    "id": "cat-psychology",
+    "name": "Psychology",
+    "parentId": "cat-non-fiction",
+    "slug": "psychology"
+  },
+  {
+    "id": "cat-business",
+    "name": "Business & Economics",
+    "parentId": "cat-non-fiction",
+    "slug": "business"
+  },
+  {
+    "id": "cat-technology",
+    "name": "Technology",
+    "parentId": "cat-non-fiction",
+    "slug": "technology"
+  },
+  {
+    "id": "cat-science",
+    "name": "Science",
+    "parentId": "cat-non-fiction",
+    "slug": "science"
+  },
+  {
+    "id": "cat-biography",
+    "name": "Biography & Memoir",
+    "parentId": "cat-non-fiction",
+    "slug": "biography"
+  },
+  {
+    "id": "cat-history",
+    "name": "History",
+    "parentId": "cat-non-fiction",
+    "slug": "history"
+  },
+  {
+    "id": "cat-health",
+    "name": "Health & Fitness",
+    "parentId": "cat-non-fiction",
+    "slug": "health"
+  },
+  {
+    "id": "cat-cooking",
+    "name": "Cooking & Food",
+    "parentId": "cat-non-fiction",
+    "slug": "cooking"
+  },
+  {
+    "id": "cat-travel",
+    "name": "Travel",
+    "parentId": "cat-non-fiction",
+    "slug": "travel"
+  },
+  {
+    "id": "cat-art",
+    "name": "Art & Photography",
+    "parentId": "cat-non-fiction",
+    "slug": "art"
+  },
+  {
+    "id": "cat-romance",
+    "name": "Romance",
+    "parentId": "cat-fiction",
+    "slug": "romance"
+  },
+  {
+    "id": "cat-sci-fi",
+    "name": "Sci-Fi",
+    "parentId": "cat-fiction",
+    "slug": "sci-fi"
+  },
+  {
+    "id": "cat-fantasy",
+    "name": "Fantasy",
+    "parentId": "cat-fiction",
+    "slug": "fantasy"
+  },
+  {
+    "id": "cat-mystery",
+    "name": "Mystery & Crime",
+    "parentId": "cat-fiction",
+    "slug": "mystery"
+  },
+  {
+    "id": "cat-thriller",
+    "name": "Thriller & Suspense",
+    "parentId": "cat-fiction",
+    "slug": "thriller"
+  },
+  {
+    "id": "cat-poetry",
+    "name": "Poetry",
+    "parentId": "cat-fiction",
+    "slug": "poetry"
+  },
+  {
+    "id": "cat-comics",
+    "name": "Comics & Graphic Novels",
+    "parentId": "cat-fiction",
+    "slug": "comics"
+  },
+  {
+    "id": "cat-children",
+    "name": "Children's Books",
+    "parentId": "cat-fiction",
+    "slug": "children"
+  },
+  {
+    "id": "cat-young-adult",
+    "name": "Young Adult",
+    "parentId": "cat-fiction",
+    "slug": "young-adult"
+  }
+]

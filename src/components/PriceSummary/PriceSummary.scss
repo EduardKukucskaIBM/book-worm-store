@@ -1,0 +1,164 @@
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/breakpoint' as bp;
+@use '../../styles/pay-bar' as pay-bar;
+
+.price-summary {
+  display: flex;
+  gap: $spacing-06;
+  color: var(--cds-text-primary);
+}
+
+.price-summary__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-05;
+}
+
+.price-summary__title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.75rem;
+}
+
+.price-summary__rows {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-04;
+}
+
+.price-summary__row {
+  display: flex;
+  justify-content: space-between;
+  gap: $spacing-04;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+
+  dt,
+  dd {
+    margin: 0;
+  }
+
+  &--total {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+}
+
+.price-summary__divider {
+  width: 100%;
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--cds-border-subtle-01);
+}
+
+.price-summary__pay {
+  display: flex;
+  justify-content: flex-end;
+}
+
+// CSS-generated illustration panel (D7): blue field with stylised books and confetti.
+.price-summary__illustration {
+  display: none;
+  position: relative;
+  flex: 0 0 11.5rem;
+  min-height: 22.75rem;
+  overflow: hidden;
+  background-color: var(--cds-background-brand);
+  background-image:
+    radial-gradient(circle at 15% 12%, var(--cds-interactive) 0 18%, transparent 19%),
+    radial-gradient(circle at 90% 55%, var(--cds-interactive) 0 22%, transparent 23%),
+    radial-gradient(circle at 20% 92%, var(--cds-interactive) 0 20%, transparent 21%);
+}
+
+// <672px hides the panel (display:none above); >=672px shows it.
+@include bp.breakpoint(md) {
+  .price-summary__illustration {
+    display: block;
+  }
+}
+
+.price-summary__book {
+  position: absolute;
+  display: block;
+  border-radius: 2px;
+  box-shadow: inset 6px 0 0 var(--cds-layer-accent-01);
+
+  &--one {
+    top: 16%;
+    left: 8%;
+    width: 38%;
+    height: 22%;
+    background-color: var(--cds-support-warning);
+    transform: rotate(-24deg);
+  }
+
+  &--two {
+    top: 28%;
+    right: 6%;
+    width: 24%;
+    height: 30%;
+    background-color: var(--cds-support-info);
+    transform: rotate(8deg);
+  }
+
+  &--three {
+    bottom: 10%;
+    left: 14%;
+    width: 64%;
+    height: 24%;
+    background-color: var(--cds-text-primary);
+    transform: rotate(-8deg);
+  }
+}
+
+.price-summary__dot {
+  position: absolute;
+  display: block;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: var(--cds-support-warning);
+  transform: rotate(45deg);
+
+  &--one {
+    top: 8%;
+    right: 18%;
+  }
+
+  &--two {
+    top: 52%;
+    left: 12%;
+  }
+
+  &--three {
+    bottom: 36%;
+    right: 12%;
+  }
+}
+
+// <672px: Pay Now lives in a sticky bottom bar.
+@include bp.breakpoint-down(md) {
+  .price-summary__pay {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    box-sizing: border-box;
+    align-items: center;
+    // Fixed height = pay-bar.$pay-bar-height (+ device safe area); Checkout pads by the same amount.
+    height: calc(#{pay-bar.$pay-bar-height} + env(safe-area-inset-bottom, 0px));
+    padding: $spacing-04 $spacing-05 env(safe-area-inset-bottom, 0px);
+    background-color: var(--cds-layer-01);
+    // box-shadow instead of border so the 1px does not eat into the fixed height
+    box-shadow: 0 -1px 0 var(--cds-border-subtle-01);
+
+    .cds--btn {
+      width: 100%;
+      max-width: none;
+    }
+  }
+}

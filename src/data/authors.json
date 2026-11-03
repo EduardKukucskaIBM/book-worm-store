@@ -1,0 +1,86 @@
+[
+  {
+    "id": "auth-1",
+    "name": "Arjun Patel",
+    "bio": "Arjun Patel is a cognitive science researcher and productivity strategist exploring attention management and deep focus.",
+    "bookIds": ["book-art-of-focus", "book-deep-work-habits"]
+  },
+  {
+    "id": "auth-2",
+    "name": "Raj Patel",
+    "bio": "Raj Patel is an author and educator specializing in high-performance mastery and accelerated skill acquisition.",
+    "bookIds": ["book-art-of-learning"]
+  },
+  {
+    "id": "auth-3",
+    "name": "James Wright",
+    "bio": "James Wright is an author and leadership mentor known for pragmatic frameworks that blend modern business strategy with enduring wisdom.",
+    "bookIds": ["book-path-to-success"]
+  },
+  {
+    "id": "auth-4",
+    "name": "James Adams",
+    "bio": "James Adams is an acclaimed novelist crafting atmospheric mystery and psychological suspense thrillers.",
+    "bookIds": ["book-midnight-hour", "book-the-silent-echo"]
+  },
+  {
+    "id": "auth-5",
+    "name": "Jessica Martin",
+    "bio": "Jessica Martin writes heartfelt contemporary romance and emotionally resonant family sagas.",
+    "bookIds": ["book-beneath-the-stars"]
+  },
+  {
+    "id": "auth-6",
+    "name": "Laura Mitchell",
+    "bio": "Laura Mitchell is an astrophysicist and science fiction novelist exploring deep-space voyages and future worlds.",
+    "bookIds": ["book-final-frontier", "book-journey-to-the-stars"]
+  },
+  {
+    "id": "auth-7",
+    "name": "Daniel Reed",
+    "bio": "Daniel Reed is a designer and minimalist advocate helping readers simplify their spaces and habits.",
+    "bookIds": ["book-joy-of-minimalism"]
+  },
+  {
+    "id": "auth-8",
+    "name": "Clara Nelson",
+    "bio": "Clara Nelson is a writer of locked-room mysteries and gothic historical suspense.",
+    "bookIds": ["book-vanishing-house"]
+  },
+  {
+    "id": "auth-9",
+    "name": "Emily Parker",
+    "bio": "Emily Parker creates delightful illustrated stories and adventures for young readers and poetry enthusiasts.",
+    "bookIds": ["book-lost-kitten", "book-wings-of-imagination"]
+  },
+  {
+    "id": "auth-10",
+    "name": "Nathan Brooks",
+    "bio": "Nathan Brooks is a seasoned software architect and educator passionate about clean architecture and algorithms.",
+    "bookIds": ["book-code-craftsman", "book-algorithmic-thinking"]
+  },
+  {
+    "id": "auth-11",
+    "name": "Dr. Maya Sen",
+    "bio": "Dr. Maya Sen is a neuroscientist and writer researching the complexities of human cognition and behavior.",
+    "bookIds": ["book-secrets-of-the-mind"]
+  },
+  {
+    "id": "auth-12",
+    "name": "Chef Vikram Sethi",
+    "bio": "Chef Vikram Sethi shares the culinary sciences and time-tested techniques behind transformative home cooking.",
+    "bookIds": ["book-the-culinary-alchemist"]
+  },
+  {
+    "id": "auth-13",
+    "name": "Kavita Rao",
+    "bio": "Kavita Rao is a historian and narrative writer uncovering lost perspectives from ancient maritime trade routes.",
+    "bookIds": ["book-whispers-of-history"]
+  },
+  {
+    "id": "auth-14",
+    "name": "Aarav Sharma",
+    "bio": "Aarav Sharma writes travel chronicles and speculative fiction on technological futures.",
+    "bookIds": ["book-the-modern-nomad", "book-echoes-of-tomorrow"]
+  }
+]

@@ -1,0 +1,290 @@
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/breakpoint' as bp;
+
+.book-card {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: $spacing-05;
+  padding: $spacing-04;
+  background-color: transparent;
+  width: 100%;
+  box-sizing: border-box;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: var(--cds-layer-hover, rgba(255, 255, 255, 0.03));
+  }
+}
+
+.book-card__cover-wrapper {
+  flex-shrink: 0;
+}
+
+.book-card__cover-link {
+  display: block;
+  text-decoration: none;
+  border-radius: 2px;
+
+  &:focus-visible {
+    outline: 2px solid var(--cds-focus, #0f62fe);
+    outline-offset: 4px;
+  }
+}
+
+.book-card__content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: $spacing-02;
+  height: 100%;
+}
+
+.book-card__header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.book-card__title {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.book-card__title-link {
+  display: inline-block;
+  min-height: 1.5rem;
+  color: var(--cds-text-primary, #ffffff);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cds-focus, #0f62fe);
+    outline-offset: 2px;
+  }
+}
+
+.book-card__author {
+  font-size: 0.8125rem;
+}
+
+.book-card__blurb {
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  color: var(--cds-text-secondary, #c6c6c6);
+  margin: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.book-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 2px;
+}
+
+.book-card__format {
+  font-size: 0.8125rem;
+  color: var(--cds-text-secondary, #c6c6c6);
+}
+
+.book-card__categories {
+  font-size: 0.8125rem;
+}
+
+.book-card__footer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: $spacing-03;
+}
+
+.book-card__price {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.book-card__delivery {
+  font-size: 0.75rem;
+  color: var(--cds-text-secondary, #c6c6c6);
+}
+
+// Related variant – compact horizontal layout matching the right-column design
+.book-card--related {
+  padding: $spacing-03 0;
+  gap: $spacing-04;
+
+  .book-card__cover-wrapper .cover-placeholder {
+    width: 80px;
+    min-height: 110px;
+  }
+
+  .book-card__title {
+    font-size: 0.9375rem;
+  }
+
+  .book-card__blurb {
+    font-size: 0.75rem;
+    -webkit-line-clamp: 2;
+  }
+
+  .book-card__price {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .book-card__delivery {
+    font-size: 0.6875rem;
+  }
+}
+
+.book-card__actions {
+  margin-top: $spacing-05;
+}
+
+// Cart variant – large cover on the left, stepper + remove under the price (screenshot 03)
+.book-card--cart {
+  padding: $spacing-03;
+  gap: $spacing-06;
+
+  &:hover {
+    background-color: transparent;
+  }
+
+  .book-card__cover-wrapper .cover-placeholder--lg {
+    width: 140px;
+    height: 196px;
+    min-width: 140px;
+
+    @include bp.breakpoint(lg) {
+      width: 240px;
+      height: 336px;
+      min-width: 240px;
+    }
+  }
+
+  .book-card__title {
+    font-size: 1.25rem;
+    font-weight: 400;
+  }
+}
+
+// Summary variant – used in confirmation page and order summaries (screenshot 05)
+.book-card--summary {
+  padding: $spacing-03;
+  background-color: transparent;
+
+  &:hover {
+    background-color: transparent;
+  }
+
+  .book-card__cover-wrapper .cover-placeholder {
+    width: 130px;
+    height: 182px;
+    min-width: 130px;
+  }
+
+  .book-card__title {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  @include bp.breakpoint-down(md) {
+    padding: $spacing-02 0;
+
+    .book-card__cover-wrapper .cover-placeholder {
+      width: 110px;
+      height: 154px;
+      min-width: 110px;
+    }
+  }
+}
+
+// Order variant – used in /orders page line items
+.book-card--order {
+  padding: $spacing-03 0;
+  gap: $spacing-04;
+
+  &:hover {
+    background-color: transparent;
+  }
+
+  .book-card__cover-wrapper .cover-placeholder {
+    width: 100px;
+    height: 140px;
+    min-width: 100px;
+  }
+
+  .book-card__title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+
+  .book-card__price {
+    font-size: 1rem;
+  }
+
+  @include bp.breakpoint-down(md) {
+    padding: $spacing-02 0;
+
+    .book-card__cover-wrapper .cover-placeholder {
+      width: 80px;
+      height: 112px;
+      min-width: 80px;
+    }
+  }
+}
+
+// Wishlist variant – used in /wishlist page grid
+.book-card--wishlist {
+  flex-direction: column;
+  align-items: stretch;
+  padding: $spacing-04;
+  background-color: var(--cds-layer-01, #262626);
+  border: 1px solid var(--cds-border-subtle-01, #393939);
+  border-radius: 4px;
+
+  &:hover {
+    background-color: var(--cds-layer-hover, #2e2e2e);
+  }
+
+  .book-card__cover-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: $spacing-04;
+  }
+
+  .book-card__cover-wrapper .cover-placeholder {
+    width: 120px;
+    height: 168px;
+    min-width: 120px;
+  }
+
+  .book-card__content {
+    flex: none;
+  }
+
+  .book-card__title {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .book-card__actions {
+    margin-top: $spacing-04;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-03;
+  }
+}
+

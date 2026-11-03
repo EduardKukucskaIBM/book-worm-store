@@ -1,0 +1,32 @@
+@use '@carbon/react/scss/spacing' as *;
+
+.gift-points {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-03;
+}
+
+.gift-points__balance {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--cds-text-primary);
+}
+
+.gift-points__rate {
+  color: var(--cds-text-secondary);
+}
+
+.gift-points__controls {
+  display: flex;
+  align-items: flex-end;
+  gap: $spacing-03;
+}
+
+.gift-points__input {
+  flex: 1;
+  min-width: 0;
+}
+
+.gift-points__max {
+  flex-shrink: 0;
+}

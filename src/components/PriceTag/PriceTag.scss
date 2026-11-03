@@ -1,0 +1,17 @@
+.price-tag {
+  font-weight: 700;
+  color: var(--cds-text-primary, #f4f4f4);
+  letter-spacing: -0.01em;
+
+  &--sm {
+    font-size: 0.9375rem;
+  }
+
+  &--md {
+    font-size: 1.125rem;
+  }
+
+  &--lg {
+    font-size: 1.5rem;
+  }
+}

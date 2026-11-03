@@ -1,0 +1,125 @@
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/type' as *;
+@use '@carbon/react/scss/breakpoint' as bp;
+
+.purchase-success {
+  width: 100%;
+  max-width: 54rem;
+  background-color: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-01);
+  border-radius: 4px;
+  padding: $spacing-08 $spacing-07;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+
+  @include bp.breakpoint-down(md) {
+    padding: $spacing-06 $spacing-05;
+  }
+}
+
+.purchase-success__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: $spacing-06;
+}
+
+.purchase-success__icon {
+  color: var(--cds-support-success, #24a148);
+  margin-bottom: $spacing-04;
+}
+
+.purchase-success__title {
+  @include type-style('heading-03');
+  color: var(--cds-text-primary);
+  margin: 0;
+  max-width: 32rem;
+
+  @include bp.breakpoint(md) {
+    @include type-style('heading-04');
+  }
+}
+
+.purchase-success__meta {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-04 $spacing-06;
+  padding: $spacing-04 $spacing-05;
+  background-color: var(--cds-layer-accent-01, rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--cds-border-subtle-01);
+  border-radius: 4px;
+  margin-bottom: $spacing-06;
+  @include type-style('body-compact-01');
+  color: var(--cds-text-secondary);
+
+  @include bp.breakpoint-down(md) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-03;
+  }
+}
+
+.purchase-success__meta-item {
+  display: flex;
+  align-items: center;
+  gap: $spacing-02;
+
+  strong {
+    color: var(--cds-text-primary);
+    font-weight: 600;
+  }
+}
+
+.purchase-success__notification {
+  width: 100%;
+  margin-bottom: $spacing-06;
+}
+
+.purchase-success__books-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-06;
+  width: 100%;
+  margin-bottom: $spacing-07;
+
+  @include bp.breakpoint-down(md) {
+    grid-template-columns: 1fr;
+    gap: $spacing-05;
+    margin-bottom: $spacing-06;
+  }
+}
+
+.purchase-success__cancel-wrapper {
+  width: 100%;
+  margin-bottom: $spacing-07;
+
+  @include bp.breakpoint-down(md) {
+    margin-bottom: $spacing-06;
+  }
+}
+
+.purchase-success__footer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+
+  @include bp.breakpoint-down(md) {
+    .cds--btn {
+      width: 100%;
+    }
+  }
+}
+
+.purchase-success__continue-btn {
+  min-width: 16rem;
+
+  @include bp.breakpoint-down(md) {
+    min-width: 100%;
+  }
+}

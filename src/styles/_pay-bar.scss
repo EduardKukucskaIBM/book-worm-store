@@ -1,0 +1,7 @@
+// Height of the fixed Pay Now bar shown below 672px (ST7).
+// One value shared by the bar (PriceSummary) and the page bottom padding (Checkout)
+// so the content can always be scrolled fully above the bar.
+@use '@carbon/react/scss/spacing' as *;
+
+// lg Carbon button (3rem) + spacing-04 above and below
+$pay-bar-height: calc(3rem + 2 * #{$spacing-04});

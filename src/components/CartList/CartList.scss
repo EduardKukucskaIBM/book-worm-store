@@ -1,0 +1,30 @@
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/breakpoint' as bp;
+
+.cart-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-06;
+
+  @include bp.breakpoint(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include bp.breakpoint(lg) {
+    grid-template-columns: repeat(auto-fill, minmax(32rem, 1fr));
+  }
+}
+
+.cart-list__item {
+  min-width: 0;
+}
+
+.cart-list__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $spacing-03;
+}

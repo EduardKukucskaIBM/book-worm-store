@@ -1,0 +1,40 @@
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/breakpoint' as bp;
+
+.orders-page {
+  width: 100%;
+  max-width: 52rem;
+}
+
+.orders-page--loading {
+  min-height: 20rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.orders-page__skeleton {
+  width: 100%;
+  height: 20rem;
+  border-radius: 4px;
+}
+
+.orders-page__title {
+  font-size: 1.75rem;
+  font-weight: 400;
+  color: var(--cds-text-primary, #ffffff);
+  margin: $spacing-05 0 $spacing-06;
+}
+
+.orders-page__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-06;
+}
+
+.orders-page__item {
+  width: 100%;
+}

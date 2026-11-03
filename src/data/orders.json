@@ -1,0 +1,86 @@
+[
+  {
+    "id": "ord-seed-recent",
+    "userId": "user-demo",
+    "items": [
+      {
+        "bookId": "book-joy-of-minimalism",
+        "title": "Joy of Minimalism",
+        "unitPrice": 149,
+        "quantity": 1
+      },
+      {
+        "bookId": "book-path-to-success",
+        "title": "The Path to Success",
+        "unitPrice": 359,
+        "quantity": 1
+      }
+    ],
+    "shippingAddress": {
+      "firstName": "Alex",
+      "lastName": "Morgan",
+      "email": "demo@bookworm.com",
+      "phoneCountryCode": "+91",
+      "phone": "9876543210",
+      "line1": "42 MG Road, Indiranagar",
+      "line2": "Apartment 304, Green Heights",
+      "city": "Bengaluru",
+      "pin": "560038",
+      "state": "Karnataka",
+      "country": "India"
+    },
+    "subtotal": 508,
+    "tax": 60.96,
+    "deliveryCharges": 0,
+    "couponCode": "BOOKWORM100",
+    "couponDiscount": 100,
+    "giftPointsRedeemed": 0,
+    "total": 468.96,
+    "paymentMethod": "credit-card",
+    "cardLast4": "1111",
+    "status": "confirmed",
+    "offsetHoursPlaced": -2,
+    "offsetDaysDelivery": 3
+  },
+  {
+    "id": "ord-seed-past",
+    "userId": "user-demo",
+    "items": [
+      {
+        "bookId": "book-final-frontier",
+        "title": "The Final Frontier",
+        "unitPrice": 359,
+        "quantity": 1
+      },
+      {
+        "bookId": "book-beneath-the-stars",
+        "title": "Beneath the Stars",
+        "unitPrice": 499,
+        "quantity": 1
+      }
+    ],
+    "shippingAddress": {
+      "firstName": "Alex",
+      "lastName": "Morgan",
+      "email": "demo@bookworm.com",
+      "phoneCountryCode": "+91",
+      "phone": "9876543210",
+      "line1": "42 MG Road, Indiranagar",
+      "line2": "Apartment 304, Green Heights",
+      "city": "Bengaluru",
+      "pin": "560038",
+      "state": "Karnataka",
+      "country": "India"
+    },
+    "subtotal": 858,
+    "tax": 102.96,
+    "deliveryCharges": 0,
+    "couponDiscount": 0,
+    "giftPointsRedeemed": 50,
+    "total": 910.96,
+    "paymentMethod": "upi",
+    "status": "delivered",
+    "offsetHoursPlaced": -72,
+    "offsetDaysDelivery": -1
+  }
+]

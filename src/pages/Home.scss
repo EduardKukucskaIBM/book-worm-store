@@ -1,0 +1,177 @@
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/breakpoint' as bp;
+
+// The Home route uses <PageLayout fullBleed>, so this page owns its spacing:
+// below lg everything is padded; from lg the sidebar sits flush against the left
+// viewport edge (design 01) and only the content column is padded.
+.home-catalogue {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: $spacing-05;
+
+  @include bp.breakpoint(md) {
+    padding: $spacing-06 $spacing-07;
+  }
+
+  @include bp.breakpoint(lg) {
+    padding: 0;
+  }
+}
+
+.home-catalogue__mobile-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-03;
+  margin-bottom: $spacing-04;
+  padding-bottom: $spacing-03;
+  border-bottom: 1px solid var(--cds-border-subtle, #393939);
+
+  @include bp.breakpoint(lg) {
+    display: none;
+  }
+}
+
+.home-catalogue__drawer-btn,
+.home-catalogue__filter-toggle-btn {
+  min-height: 2.25rem;
+}
+
+.home-catalogue__layout {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-06;
+  width: 100%;
+
+  @include bp.breakpoint(lg) {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0;
+  }
+}
+
+.home-catalogue__sidebar-desktop {
+  display: none;
+
+  @include bp.breakpoint(lg) {
+    display: block;
+    width: 16rem; // 256px, as in design 01
+    flex-shrink: 0;
+    position: sticky;
+    top: $spacing-09; // below the fixed 3rem header
+    max-height: calc(100dvh - #{$spacing-09});
+    overflow-y: auto;
+    padding: $spacing-05 0;
+  }
+}
+
+.home-catalogue__content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+
+  @include bp.breakpoint(lg) {
+    max-width: 90rem;
+    padding: $spacing-05 $spacing-05 $spacing-07;
+  }
+}
+
+.home-catalogue__filter-bar-container {
+  width: 100%;
+
+  @media (max-width: 671px) {
+    &:not(.home-catalogue__filter-bar-container--mobile-open) {
+      .filter-bar__selects {
+        display: none;
+      }
+    }
+  }
+}
+
+.home-catalogue__shelves,
+.home-catalogue__results {
+  width: 100%;
+  margin-top: $spacing-04;
+}
+
+.home-catalogue__empty-state {
+  margin: $spacing-08 0;
+}
+
+/* Off-canvas Drawer for Categories (<1056px) */
+.home-catalogue__drawer-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--cds-overlay, rgba(0, 0, 0, 0.65));
+  z-index: 9000;
+  display: flex;
+  animation: fadeIn 0.15s ease-out;
+}
+
+// Full-size invisible button behind the panel: clicking outside the panel closes it
+.home-catalogue__drawer-scrim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: default;
+}
+
+.home-catalogue__drawer-panel {
+  position: relative;
+  width: 80%;
+  max-width: 320px;
+  height: 100%;
+  background-color: var(--cds-layer-01, #262626);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  animation: slideInLeft 0.2s cubic-bezier(0, 0, 0.2, 1);
+  overflow-y: auto;
+}
+
+.home-catalogue__drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-05;
+  border-bottom: 1px solid var(--cds-border-subtle, #393939);
+}
+
+.home-catalogue__drawer-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--cds-text-primary, #ffffff);
+}
+
+.home-catalogue__drawer-body {
+  flex: 1;
+  padding: $spacing-03 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

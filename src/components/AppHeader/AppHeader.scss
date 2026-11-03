@@ -1,0 +1,214 @@
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/breakpoint' as bp;
+@use '@carbon/react/scss/type' as *;
+
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: $spacing-09;
+  z-index: 8000;
+  background-color: var(--cds-background);
+  border-bottom: 1px solid var(--cds-border-subtle-01);
+  color: var(--cds-text-primary);
+
+  // Focus visibility
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--cds-focus);
+    outline-offset: -2px;
+  }
+}
+
+// Brand logo and text
+.app-header__brand {
+  display: flex;
+  align-items: center;
+  gap: $spacing-03;
+  padding: 0 $spacing-05;
+  text-decoration: none;
+  color: var(--cds-text-primary);
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.16px;
+  border-right: 1px solid var(--cds-border-subtle-01);
+  height: 100%;
+
+  &:hover {
+    color: var(--cds-text-primary);
+    background-color: var(--cds-layer-hover-01);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cds-focus);
+    outline-offset: -2px;
+  }
+}
+
+.app-header__brand-icon {
+  flex-shrink: 0;
+  fill: currentColor;
+  margin-right: $spacing-03;
+}
+
+.app-header__brand-title {
+  white-space: nowrap;
+}
+
+// Responsive menu button and navigation
+.app-header__menu-button {
+  display: flex;
+
+  @include bp.breakpoint(lg) {
+    display: none;
+  }
+}
+
+.app-header__nav {
+  display: none;
+
+  @include bp.breakpoint(lg) {
+    display: flex;
+    flex: 1;
+  }
+}
+
+// Global actions container (Cart + User)
+.app-header__global-bar {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+// Global actions (Cart, User links and buttons)
+.app-header__global-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $spacing-09;
+  height: $spacing-09;
+  border: none;
+  background: transparent;
+  color: var(--cds-text-primary);
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover {
+    background-color: var(--cds-layer-hover-01);
+    color: var(--cds-text-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cds-focus);
+    outline-offset: -2px;
+  }
+}
+
+// Cart button and badge
+.app-header__cart-action {
+  position: relative;
+}
+
+.app-header__cart-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-header__cart-badge {
+  position: absolute;
+  top: -$spacing-03;
+  right: -$spacing-04;
+  min-width: 1.125rem;
+  height: 1.125rem;
+  padding: 0 $spacing-02;
+  border-radius: 0.5625rem;
+  background-color: var(--cds-support-error);
+  color: var(--cds-text-on-color);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.125rem;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+// User action and popover menu
+.app-header__user-menu-container {
+  position: relative;
+  display: inline-flex;
+}
+
+.app-header__user-action {
+  color: var(--cds-text-primary);
+}
+
+.app-header__user-popover {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  min-width: 14rem;
+  background-color: var(--cds-layer-01);
+  border: 1px solid var(--cds-border-subtle-01);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  z-index: 9000;
+  padding: $spacing-03 0;
+}
+
+.app-header__user-info {
+  padding: $spacing-03 $spacing-05;
+}
+
+.app-header__user-name {
+  font-weight: 600;
+  color: var(--cds-text-primary);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.app-header__user-email {
+  font-size: 0.75rem;
+  color: var(--cds-text-secondary);
+  line-height: 1rem;
+}
+
+.app-header__user-divider {
+  height: 1px;
+  background-color: var(--cds-border-subtle-01);
+  margin: $spacing-02 0;
+}
+
+.app-header__user-logout {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: $spacing-03;
+  padding: $spacing-03 $spacing-05;
+  background: transparent;
+  border: none;
+  color: var(--cds-text-primary);
+  font-size: 0.875rem;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--cds-layer-hover-01);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cds-focus);
+    outline-offset: -2px;
+  }
+}
+
+// SideNav on mobile/tablet
+.app-header__side-nav {
+  @include bp.breakpoint(lg) {
+    display: none;
+  }
+}

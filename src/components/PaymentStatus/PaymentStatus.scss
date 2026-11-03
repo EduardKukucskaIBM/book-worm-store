@@ -1,0 +1,21 @@
+@use '@carbon/react/scss/spacing' as *;
+
+.payment-status {
+  margin-top: $spacing-05;
+}
+
+.payment-status--processing {
+  display: flex;
+  align-items: center;
+  min-height: 2.5rem;
+}
+
+.payment-status--failure {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-03;
+}
+
+.payment-status__retry {
+  align-self: flex-start;
+}

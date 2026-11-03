@@ -1,0 +1,77 @@
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/breakpoint' as bp;
+@use '../styles/pay-bar' as pay-bar;
+
+.checkout {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-06;
+  width: 100%;
+  color: var(--cds-text-primary);
+
+  // <672px: reserve exactly the height of the fixed Pay Now bar so everything can scroll above it
+  padding-bottom: calc(#{pay-bar.$pay-bar-height} + env(safe-area-inset-bottom, 0px));
+
+  @include bp.breakpoint(md) {
+    padding-bottom: 0;
+  }
+}
+
+.checkout__title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 400;
+  line-height: 2.25rem;
+}
+
+.checkout .app-breadcrumbs {
+  margin-bottom: 0;
+}
+
+.checkout__tile {
+  padding: $spacing-05;
+  background-color: var(--cds-layer-01);
+
+  @include bp.breakpoint(md) {
+    padding: $spacing-06;
+  }
+}
+
+.checkout__section-title {
+  margin: 0 0 $spacing-06;
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.75rem;
+}
+
+// <1056px: address and summary stacked; >=1056px: side by side as designed
+.checkout__columns {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-06;
+
+  @include bp.breakpoint(lg) {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.checkout__address {
+  min-width: 0;
+
+  @include bp.breakpoint(lg) {
+    flex: 1 1 0;
+  }
+}
+
+.checkout__summary {
+  min-width: 0;
+
+  @include bp.breakpoint(lg) {
+    flex: 0 0 38%;
+  }
+}
+
+.checkout__recommendations {
+  margin-top: $spacing-05;
+}

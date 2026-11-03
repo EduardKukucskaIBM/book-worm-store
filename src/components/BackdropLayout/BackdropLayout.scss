@@ -1,0 +1,53 @@
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/breakpoint' as bp;
+
+.backdrop-layout {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--cds-background);
+  background-image:
+    radial-gradient(
+      circle at 18% 15%,
+      rgba(15, 98, 254, 0.14) 0%,
+      rgba(15, 98, 254, 0) 45%
+    ),
+    radial-gradient(
+      circle at 82% 80%,
+      rgba(111, 44, 242, 0.12) 0%,
+      rgba(111, 44, 242, 0) 50%
+    ),
+    radial-gradient(
+      circle at 50% 25%,
+      rgba(0, 45, 156, 0.08) 0%,
+      rgba(0, 45, 156, 0) 60%
+    ),
+    linear-gradient(
+      180deg,
+      var(--cds-background) 0%,
+      var(--cds-layer-01) 100%
+    );
+  background-attachment: fixed;
+  color: var(--cds-text-primary);
+}
+
+.backdrop-layout__main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: $spacing-09; // 3rem (48px) to account for fixed Header
+  padding: $spacing-07 $spacing-05;
+
+  @include bp.breakpoint(md) {
+    padding: $spacing-08 $spacing-07;
+  }
+}
+
+.backdrop-layout__card-container {
+  width: 100%;
+  max-width: 48rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

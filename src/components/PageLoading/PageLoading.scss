@@ -1,0 +1,15 @@
+@use '@carbon/react/scss/spacing' as *;
+
+.page-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-03;
+  min-height: 50vh;
+  padding: $spacing-07 $spacing-05;
+  color: var(--cds-text-secondary);
+}
+
+.page-loading__text {
+  font-size: 0.875rem;
+}

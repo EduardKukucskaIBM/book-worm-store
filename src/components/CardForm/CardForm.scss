@@ -1,0 +1,21 @@
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/breakpoint' as bp;
+
+.card-form {
+  flex: 1;
+}
+
+.card-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-05;
+  margin-bottom: $spacing-05;
+
+  @include bp.breakpoint-down(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card-form__field {
+  // Carbon TextInput fills the column
+}

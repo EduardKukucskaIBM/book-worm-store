@@ -1,0 +1,91 @@
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/breakpoint' as bp;
+
+.writers-page {
+  width: 100%;
+}
+
+.writers-page__title {
+  font-size: 1.75rem;
+  font-weight: 400;
+  color: var(--cds-text-primary, #ffffff);
+  margin: $spacing-05 0 $spacing-06;
+}
+
+.writers-page__grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-05;
+
+  @include bp.breakpoint(md) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include bp.breakpoint(lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.writer-card {
+  display: flex;
+  align-items: center;
+  gap: $spacing-05;
+  padding: $spacing-05;
+  background-color: var(--cds-layer-01, #262626);
+  border: 1px solid var(--cds-border-subtle-01, #393939);
+  border-radius: 4px;
+  text-decoration: none;
+  color: var(--cds-text-primary, #ffffff);
+  transition: background-color 0.15s ease;
+  width: 100%;
+  box-sizing: border-box;
+
+  &:hover {
+    background-color: var(--cds-layer-hover, #2e2e2e);
+    text-decoration: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--cds-focus, #0f62fe);
+    outline-offset: 2px;
+  }
+}
+
+.writer-card__avatar {
+  flex-shrink: 0;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background-color: var(--cds-button-primary, #0f62fe);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.writer-card__body {
+  min-width: 0;
+  flex: 1;
+}
+
+.writer-card__name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--cds-text-primary, #ffffff);
+  margin: 0 0 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.writer-card__count {
+  font-size: 0.8125rem;
+  color: var(--cds-text-secondary, #c6c6c6);
+  margin: 0;
+}
